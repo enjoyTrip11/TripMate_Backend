@@ -53,7 +53,7 @@
         WHERE boardId = #{boardId}
     </update>
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="boardId">
         INSERT INTO board (userId, title, contents, filePath, category)
         VALUES (#{userId}, #{title}, #{contents}, #{filePath}, #{category})
     </insert>

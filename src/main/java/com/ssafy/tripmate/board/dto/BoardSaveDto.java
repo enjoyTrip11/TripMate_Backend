@@ -1,19 +1,18 @@
 package com.ssafy.tripmate.board.dto;
 
-import java.time.LocalDateTime;
-
 public class BoardSaveDto {
+
+    private int userId;
     private String title;
     private String contents;
-    private LocalDateTime createDate;
     private String filePath;
     private String category;
 
     public Board toEntity() {
         return Board.builder()
+                .userId(userId)
                 .title(title)
                 .contents(contents)
-                .createDate(createDate)
                 .filePath(filePath)
                 .category(category)
                 .build();

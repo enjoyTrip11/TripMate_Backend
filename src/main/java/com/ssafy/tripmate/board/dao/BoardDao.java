@@ -22,6 +22,6 @@ public interface BoardDao {
 
     public void update(Board board) throws SQLException;
 
-    public void insert(Board board) throws SQLException;
+    public int insert(Board board) throws SQLException;
 
 }

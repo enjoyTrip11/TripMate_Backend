@@ -2,6 +2,9 @@ package com.ssafy.tripmate.board.controller;
 
 import com.ssafy.tripmate.board.dto.*;
 import com.ssafy.tripmate.board.service.BoardService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/board")
+@Tag(name = "Board 컨트롤러", description = "게시글 CRUD 관련 클래스")
 public class BoardController {
 
     private Logger logger = LoggerFactory.getLogger(BoardController.class);
@@ -41,6 +45,9 @@ public class BoardController {
 
 
     @GetMapping("")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "게시글 목록 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "게시물 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 에러") })
     public ResponseEntity<?> loadBoard() {
         List<BoardResponseDto> boards = service.findAll();
         if (boards.isEmpty()) {
@@ -50,6 +57,9 @@ public class BoardController {
     }
 
     @GetMapping("/{category}")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "검색어별 게시글 목록 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "게시물 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 에러") })
     public ResponseEntity<?> loadBoard(
             @PathVariable("category") String category,
             @RequestParam(required = false) Integer userId,
@@ -74,6 +84,9 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "게시물 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "게시물 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 에러") })
     public ResponseEntity<?> loadBoard(@PathVariable("boardId") int boardId) {
         Board board = service.findByBoardId(boardId);
         if (board == null) {
@@ -83,16 +96,22 @@ public class BoardController {
     }
 
     @DeleteMapping("/{boardId}")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "게시판 삭제 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 에러") })
     public ResponseEntity<Integer> deleteBoard(@PathVariable("boardId") int boardId) {
         return new ResponseEntity<>(service.delete(boardId), HttpStatus.OK);
     }
 
     @PostMapping
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "게시판 작성 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 에러") })
     public ResponseEntity<Integer> createBoard(@RequestBody BoardSaveDto boardSaveDto) {
         return new ResponseEntity<>(service.insert(boardSaveDto), HttpStatus.OK);
     }
 
     @PutMapping("/{boardId}")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "게시판 수정 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 에러") })
     public ResponseEntity<Integer> updateBoard(@PathVariable("boardId") int boardId, @RequestBody BoardUpdateDto boardUpdateDto) {
         return new ResponseEntity<>(service.update(boardId, boardUpdateDto), HttpStatus.OK);
     }

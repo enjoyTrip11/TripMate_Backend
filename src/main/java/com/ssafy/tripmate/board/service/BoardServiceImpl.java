@@ -22,7 +22,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public List<BoardResponseDto> searchAll() {
+    public List<BoardResponseDto> findAll() {
         try {
             List<Board> boards = dao.searchAll();
             return boards.stream()
@@ -35,7 +35,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public List<BoardResponseDto> searchAllByUserId(String category, int userId) {
+    public List<BoardResponseDto> findAllByUserId(String category, int userId) {
         try {
             List<Board> boards = dao.searchAllByUserId(category, userId);
             return boards.stream()
@@ -48,7 +48,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public List<BoardResponseDto> searchAllByKeyword(String category, String keyword) {
+    public List<BoardResponseDto> findAllByKeyword(String category, String keyword) {
         try {
             List<Board> boards = dao.searchAllByKeyword(category, keyword);
             return boards.stream()
@@ -61,7 +61,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public List<BoardResponseDto> searchAllByCategory(String category) {
+    public List<BoardResponseDto> findAllByCategory(String category) {
         try {
             List<Board> boards = dao.searchAllByCategory(category);
             return boards.stream()
@@ -74,7 +74,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public Board searchByBoardId(int boardId) {
+    public Board findByBoardId(int boardId) {
         try {
             return dao.searchByBoardId(boardId);
         } catch (SQLException e) {
@@ -84,7 +84,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public int remove(int boardId) {
+    public int delete(int boardId) {
         try {
             Board board = dao.searchByBoardId(boardId);
 
@@ -116,11 +116,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public int insert(int userId, BoardSaveDto boardSaveDto) {
+    public int insert(BoardSaveDto boardSaveDto) {
         Board board = boardSaveDto.toEntity();
         try {
-            dao.insert(board);
-            return userId;
+            return dao.insert(board);
         } catch (SQLException e) {
             throw new BoardException("게시물 등록 중 오류 발생");
         }

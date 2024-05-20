@@ -9,19 +9,19 @@ import java.util.List;
 
 public interface BoardService {
 
-    public List<BoardResponseDto> searchAll();
+    public List<BoardResponseDto> findAll();
 
-    public List<BoardResponseDto> searchAllByUserId(String category, int userId);
+    public List<BoardResponseDto> findAllByUserId(String category, int userId);
 
-    public List<BoardResponseDto> searchAllByKeyword(String category, String keyword);
+    public List<BoardResponseDto> findAllByKeyword(String category, String keyword);
 
-    public List<BoardResponseDto> searchAllByCategory(String category);
+    public List<BoardResponseDto> findAllByCategory(String category);
 
-    public Board searchByBoardId(int boardId);
+    public Board findByBoardId(int boardId);
 
-    public int remove(int boardId);
+    public int delete(int boardId);
 
     public int update(int boardId, BoardUpdateDto boardUpdateDto);
 
-    public int insert(int userId, BoardSaveDto boardSaveDto);
+    public int insert(BoardSaveDto boardSaveDto);
 }

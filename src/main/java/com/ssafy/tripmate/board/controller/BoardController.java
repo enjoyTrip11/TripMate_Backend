@@ -50,27 +50,23 @@ public class BoardController {
     }
 
     @GetMapping("/{category}")
-    public ResponseEntity<?> loadBoardByCategory(@PathVariable("category") String category) {
-        List<BoardResponseDto> boards = service.findAllByCategory(category);
-        if (boards.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(boards, HttpStatus.OK);
-    }
+    public ResponseEntity<?> loadBoard(
+            @PathVariable("category") String category,
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String keyword) {
 
-    @GetMapping("/{category}")
-    public ResponseEntity<?> loadBoardByUserId(@PathVariable("category") String category, @RequestParam("userId") int userId) {
-        // TODO: userID -> ID로 해야 함
-        List<BoardResponseDto> boards = service.findAllByUserId(category, userId);
-        if (boards.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        List<BoardResponseDto> boards;
+        if (userId != null) {
+            // 사용자 ID에 따른 게시글 조회
+            boards = service.findAllByUserId(category, userId);
+        } else if (keyword != null) {
+            // 키워드에 따른 게시글 조회
+            boards = service.findAllByKeyword(category, keyword);
+        } else {
+            // 카테고리에 따른 게시글 조회
+            boards = service.findAllByCategory(category);
         }
-        return new ResponseEntity<>(boards, HttpStatus.OK);
-    }
 
-    @GetMapping("/{category}")
-    public ResponseEntity<?> loadBoardByKeyword(@PathVariable("category") String category, @RequestParam("keyword") String keyword) {
-        List<BoardResponseDto> boards = service.findAllByKeyword(category, keyword);
         if (boards.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -96,7 +92,7 @@ public class BoardController {
         return new ResponseEntity<>(service.insert(boardSaveDto), HttpStatus.OK);
     }
 
-    @PutMapping("/{boardId")
+    @PutMapping("/{boardId}")
     public ResponseEntity<Integer> updateBoard(@PathVariable("boardId") int boardId, @RequestBody BoardUpdateDto boardUpdateDto) {
         return new ResponseEntity<>(service.update(boardId, boardUpdateDto), HttpStatus.OK);
     }

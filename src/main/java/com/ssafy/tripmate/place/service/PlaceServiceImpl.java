@@ -43,6 +43,7 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public List<PlaceResponseDto> findAll(SearchFilter searchFilter) {
         try {
+            log.debug("1!!!!!!!!!!!! {}", searchFilter);
             double userLat = searchFilter.getLatitude();
             double userLon = searchFilter.getLongitude();
 

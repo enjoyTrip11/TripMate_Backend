@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ssafy.tripmate.trip.dao.TripDao">
+
+    <select id="searchAll" resultType="Trip">
+        SELECT *
+        FROM trip
+    </select>
+
+    <select id="searchAllByUserId" resultType="Trip">
+        SELECT * FROM trip
+        WHERE writer = #{userId}
+        UNION
+        SELECT t.* FROM trip t
+        JOIN trip_invite ti ON t.trip_id = ti.trip_id
+        WHERE ti.receiver = #{userId} AND ti.state = 'friend';
+    </select>
+
+    <select id="searchByTripId" resultType="Trip">
+        SELECT *
+        FROM trip
+        WHERE tripId = #{tripId}
+    </select>
+
+    <delete id="remove">
+        DELETE
+        FROM trip
+        WHERE tripId = #{tripId}
+    </delete>
+
+    <update id="update">
+        UPDATE trip
+        SET title    = #{title},
+            place = #{place},
+            img = #{img},
+            startDate = #{startDate},
+            endDate = #{endDate}
+        WHERE tripId = #{tripId}
+    </update>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="tripId">
+        INSERT INTO trip (writer, title, place, img, startDate, endDate)
+        VALUES (#{writer}, #{title}, #{place}, #{img}, #{startDate}, #{endDate})
+    </insert>
+
+</mapper>

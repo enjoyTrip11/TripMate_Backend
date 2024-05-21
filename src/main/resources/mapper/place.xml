@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ssafy.tripmate.place.dao.PlaceDao">
+
+    <select id="searchAll" parameterType="SearchFilter" resultType="Place">
+        SELECT *
+        FROM location
+        WHERE 1=1
+        <if test="keyword != null and keyword != ''">
+            AND (title LIKE CONCAT('%', #{keyword}, '%') OR overview LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="sidoCode != null">
+            AND sidoCode = #{sidoCode}
+        </if>
+        <if test="contentTypeId != null">
+            AND contentTypeId = #{contentTypeId}
+        </if>
+    </select>
+
+</mapper>

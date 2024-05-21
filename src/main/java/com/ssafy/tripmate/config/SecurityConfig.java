@@ -1,5 +1,6 @@
 package com.ssafy.tripmate.config;
 
+import com.ssafy.tripmate.user.role.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,21 +31,39 @@ public class SecurityConfig {
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+
+		// 접근 권한 설정
 		http
-			.csrf(AbstractHttpConfigurer::disable)
-			.sessionManagement((sessionManagement) -> 
-				sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			)
-			.formLogin(AbstractHttpConfigurer::disable)
-			.httpBasic(AbstractHttpConfigurer::disable)
-			.authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-					.requestMatchers(new MvcRequestMatcher(introspector, "/api/user")).permitAll()
-			)
-			.oauth2Login(oauth2Login->
-			oauth2Login.userInfoEndpoint(UserInfoEndpointConfig ->
-						UserInfoEndpointConfig.userService(customOAuth2UserService)
-					)
-			);
-			return http.build();
+				.authorizeHttpRequests((auth) -> auth
+						.requestMatchers("/oauth-login/admin").hasRole(Role.USER.name())
+						.requestMatchers("/oauth-login/info").authenticated()
+						.anyRequest().permitAll()
+				);
+
+		// 폼 로그인 방식 설정
+		http
+				.formLogin((auth) -> auth.loginPage("/oauth-login/login")
+						.loginProcessingUrl("/oauth-login/loginProc")
+						.usernameParameter("loginId")
+						.passwordParameter("password")
+						.defaultSuccessUrl("/oauth-login")
+						.failureUrl("/oauth-login")
+						.permitAll());
+
+		// OAuth 2.0 로그인 방식 설정
+		http
+				.oauth2Login((auth) -> auth.loginPage("/oauth-login/login")
+						.defaultSuccessUrl("/oauth-login")
+						.failureUrl("/oauth-login/login")
+						.permitAll());
+
+		http
+				.logout((auth) -> auth
+						.logoutUrl("/oauth-login/logout"));
+
+		http
+				.csrf((auth) -> auth.disable());
+
+		return http.build();
 	}
 }

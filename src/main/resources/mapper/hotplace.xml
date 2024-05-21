@@ -4,7 +4,19 @@
 
 <mapper namespace="com.ssafy.tripmate.place.dao.HotPlaceDao">
 
-    <insert id="insert" parameterType="map">
+    <select id="searchByBoardUser" parameterType="map" resultType="HotPlace">
+        SELECT *
+        FROM hotplace
+        where boardId = #{boardId} and userId = #{userId}
+    </select>
+
+    <select id="searchById" parameterType="int" resultType="HotPlace">
+        SELECT *
+        FROM hotplace
+        where hotplaceId = #{hotplaceId}
+    </select>
+
+    <insert id="insert" parameterType="map" useGeneratedKeys="true" keyProperty="hotplaceId">
         INSERT INTO hotplace (userId, locationId)
         VALUES (#{userId}, #{locationId})
     </insert>
@@ -24,10 +36,11 @@
         WHERE h.userId = #{userId}
     </select>
 
-    <select id="searchAllHotPlace" resultType="Place">
-        SELECT p.*
+    <select id="searchAllHotPlace" resultType="HotPlaceResponseDto">
+        SELECT p.*, COUNT(h.locationId) AS hits
         FROM place p
                  JOIN hotplace h ON p.locationId = h.locationId
+        GROUP BY p.locationId
     </select>
 
 </mapper>

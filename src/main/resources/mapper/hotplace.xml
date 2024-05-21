@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.tripmate.place.dao.HotPlaceDao">
+
+    <insert id="insert" parameterType="map">
+        INSERT INTO hotplace (userId, locationId)
+        VALUES (#{userId}, #{locationId})
+    </insert>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM hotplace WHERE hotplaceId = #{hotplaceId}
+    </delete>
+
+    <select id="countHotPlaceHits" resultType="int" parameterType="int">
+        SELECT COUNT(*) FROM hotplace WHERE locationId = #{placeId}
+    </select>
+
+    <select id="searchHotPlaceByUser" resultType="Place" parameterType="int">
+        SELECT p.*
+        FROM place p
+                 JOIN hotplace h ON p.locationId = h.locationId
+        WHERE h.userId = #{userId}
+    </select>
+
+    <select id="searchAllHotPlace" resultType="Place">
+        SELECT p.*
+        FROM place p
+                 JOIN hotplace h ON p.locationId = h.locationId
+    </select>
+
+</mapper>

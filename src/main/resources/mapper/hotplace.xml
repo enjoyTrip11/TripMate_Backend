@@ -7,7 +7,8 @@
     <select id="searchByBoardUser" parameterType="map" resultType="HotPlace">
         SELECT *
         FROM hotplace
-        where boardId = #{boardId} and userId = #{userId}
+        where boardId = #{boardId}
+          and userId = #{userId}
     </select>
 
     <select id="searchById" parameterType="int" resultType="HotPlace">
@@ -22,11 +23,15 @@
     </insert>
 
     <delete id="delete" parameterType="int">
-        DELETE FROM hotplace WHERE hotplaceId = #{hotplaceId}
+        DELETE
+        FROM hotplace
+        WHERE hotplaceId = #{hotplaceId}
     </delete>
 
     <select id="countHotPlaceHits" resultType="int" parameterType="int">
-        SELECT COUNT(*) FROM hotplace WHERE locationId = #{placeId}
+        SELECT COUNT(*)
+        FROM hotplace
+        WHERE locationId = #{placeId}
     </select>
 
     <select id="searchHotPlaceByUser" resultType="Place" parameterType="int">

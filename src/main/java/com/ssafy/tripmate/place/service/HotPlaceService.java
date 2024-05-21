@@ -6,7 +6,10 @@ import java.util.List;
 
 public interface HotPlaceService {
     int regist(int boardId, int userId);
+
     void remove(int hotplaceId);
+
     List<HotPlaceResponseDto> sortUserHotPlacesByHits(int userId);
+
     List<HotPlaceResponseDto> sortAllHotPlacesByHits();
 }

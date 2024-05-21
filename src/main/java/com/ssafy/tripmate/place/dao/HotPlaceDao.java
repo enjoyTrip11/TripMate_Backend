@@ -12,7 +12,9 @@ import java.util.List;
 public interface HotPlaceDao {
 
     HotPlace searchByBoardUser(int boardId, int userId) throws SQLException;
+
     HotPlace searchById(int hotplaceId) throws SQLException;
+
     void insert(int boardId, int userId) throws SQLException;
 
     void delete(int hotplaceId) throws SQLException;

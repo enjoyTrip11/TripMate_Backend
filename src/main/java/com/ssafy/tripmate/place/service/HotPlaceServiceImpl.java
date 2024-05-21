@@ -1,14 +1,16 @@
 package com.ssafy.tripmate.place.service;
 
 import com.ssafy.tripmate.place.dao.HotPlaceDao;
-import com.ssafy.tripmate.place.dto.*;
+import com.ssafy.tripmate.place.dto.HotPlace;
+import com.ssafy.tripmate.place.dto.HotPlaceException;
+import com.ssafy.tripmate.place.dto.HotPlaceResponseDto;
+import com.ssafy.tripmate.place.dto.Place;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j

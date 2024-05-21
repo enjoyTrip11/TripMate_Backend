@@ -17,8 +17,8 @@ public class Reply {
     private Integer replyUserId;
     String comment;
 
-    public void update(BoardUpdateDto boardUpdateDto) {
-        this.comment = boardUpdateDto.getContent();
+    public void update(ReplyUpdateDto replyUpdateDto) {
+        this.comment = replyUpdateDto.getComment();
     }
 
     @Override

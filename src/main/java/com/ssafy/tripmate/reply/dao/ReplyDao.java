@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface ReplyDao {
 
-    void insert(Reply reply) throws SQLException;
+    int insert(Reply reply) throws SQLException;
 
     List<Reply> searchAll(int boardId) throws SQLException;
 

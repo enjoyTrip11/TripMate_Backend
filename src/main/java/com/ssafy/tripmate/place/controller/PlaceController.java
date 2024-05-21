@@ -1,18 +1,18 @@
 package com.ssafy.tripmate.place.controller;
 
+import com.ssafy.tripmate.place.dto.PlaceException;
 import com.ssafy.tripmate.place.dto.PlaceResponseDto;
 import com.ssafy.tripmate.place.dto.SearchFilter;
 import com.ssafy.tripmate.place.service.PlaceService;
+import com.ssafy.tripmate.reply.dto.ReplyException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +26,19 @@ public class PlaceController {
 
     public PlaceController(PlaceService service) {
         this.service = service;
+    }
+
+    @RestControllerAdvice
+    public class GlobalExceptionHandler {
+
+        @ExceptionHandler(PlaceException.class)
+        public ResponseEntity<String> handleException(PlaceException e) {
+            log.error("place.error >>> msg: {}", e.getMessage());
+
+            HttpHeaders resHeader = new HttpHeaders();
+            resHeader.add("Content-Type", "application/json;charset=UTF-8");
+            return new ResponseEntity<>("place 처리 중 오류 발생:" + e.getMessage(), resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping

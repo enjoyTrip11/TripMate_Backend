@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.sql.SQLException;
@@ -41,9 +42,9 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
+    @Transactional
     public List<PlaceResponseDto> findAll(SearchFilter searchFilter) {
         try {
-            log.debug("1!!!!!!!!!!!! {}", searchFilter);
             double userLat = searchFilter.getLatitude();
             double userLon = searchFilter.getLongitude();
 

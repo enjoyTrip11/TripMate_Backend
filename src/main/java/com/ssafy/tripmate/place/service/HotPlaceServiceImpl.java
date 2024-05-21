@@ -7,6 +7,7 @@ import com.ssafy.tripmate.place.dto.HotPlaceResponseDto;
 import com.ssafy.tripmate.place.dto.Place;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -23,21 +24,22 @@ public class HotPlaceServiceImpl implements HotPlaceService {
     }
 
     @Override
-    public int regist(int boardId, int userId) {
+    @Transactional
+    public int regist(int locationId, int userId) {
         try {
-            HotPlace hotPlace = dao.searchByBoardUser(boardId, userId);
-
+            HotPlace hotPlace = dao.searchByLocUser(locationId, userId);
             if (hotPlace != null) {
                 throw new HotPlaceException("이미 등록된 핫플레이스입니다.");
             }
-            dao.insert(boardId, userId);
-            return hotPlace.getHotplaceId();
+            dao.insert(locationId, userId);
+            return dao.searchByLocUser(locationId, userId).getHotplaceId();
         } catch (SQLException e) {
             throw new HotPlaceException(e.getMessage());
         }
     }
 
     @Override
+    @Transactional
     public void remove(int hotplaceId) {
         try {
             HotPlace hotPlace = dao.searchById(hotplaceId);
@@ -51,6 +53,7 @@ public class HotPlaceServiceImpl implements HotPlaceService {
     }
 
     @Override
+    @Transactional
     public List<HotPlaceResponseDto> sortUserHotPlacesByHits(int userId) {
         try {
             List<Place> places = dao.searchHotPlaceByUser(userId);
@@ -83,6 +86,7 @@ public class HotPlaceServiceImpl implements HotPlaceService {
     }
 
     @Override
+    @Transactional
     public List<HotPlaceResponseDto> sortAllHotPlacesByHits() {
         try {
             return dao.searchAllHotPlace().stream()

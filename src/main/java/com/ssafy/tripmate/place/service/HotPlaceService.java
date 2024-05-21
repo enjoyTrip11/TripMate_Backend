@@ -5,7 +5,7 @@ import com.ssafy.tripmate.place.dto.HotPlaceResponseDto;
 import java.util.List;
 
 public interface HotPlaceService {
-    int regist(int boardId, int userId);
+    int regist(int locationId, int userId);
 
     void remove(int hotplaceId);
 

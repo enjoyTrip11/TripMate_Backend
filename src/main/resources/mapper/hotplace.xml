@@ -4,11 +4,11 @@
 
 <mapper namespace="com.ssafy.tripmate.place.dao.HotPlaceDao">
 
-    <select id="searchByBoardUser" parameterType="map" resultType="HotPlace">
+    <select id="searchByLocUser" parameterType="map" resultType="HotPlace">
         SELECT *
         FROM hotplace
-        where boardId = #{boardId}
-          and userId = #{userId}
+                 where locationId = #{locationId}
+        and userId = #{userId}
     </select>
 
     <select id="searchById" parameterType="int" resultType="HotPlace">
@@ -17,7 +17,7 @@
         where hotplaceId = #{hotplaceId}
     </select>
 
-    <insert id="insert" parameterType="map" useGeneratedKeys="true" keyProperty="hotplaceId">
+    <insert id="insert">
         INSERT INTO hotplace (userId, locationId)
         VALUES (#{userId}, #{locationId})
     </insert>
@@ -35,17 +35,17 @@
     </select>
 
     <select id="searchHotPlaceByUser" resultType="Place" parameterType="int">
-        SELECT p.*
-        FROM place p
-                 JOIN hotplace h ON p.locationId = h.locationId
+        SELECT l.*
+        FROM location l
+                 JOIN hotplace h ON l.locationId = h.locationId
         WHERE h.userId = #{userId}
     </select>
 
     <select id="searchAllHotPlace" resultType="HotPlaceResponseDto">
-        SELECT p.*, COUNT(h.locationId) AS hits
-        FROM place p
-                 JOIN hotplace h ON p.locationId = h.locationId
-        GROUP BY p.locationId
+        SELECT l.*, COUNT(h.locationId) AS hits
+        FROM location l
+                 JOIN hotplace h ON l.locationId = h.locationId
+        GROUP BY l.locationId
     </select>
 
 </mapper>

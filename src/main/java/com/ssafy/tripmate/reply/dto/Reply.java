@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class Reply {
-    int replyId;
-    int boardId;
-    int userId;
-    int replyUserId;
+    private Integer replyId;
+    private Integer boardId;
+    private Integer userId;
+    private Integer replyUserId;
     String comment;
 
     public void update(BoardUpdateDto boardUpdateDto) {

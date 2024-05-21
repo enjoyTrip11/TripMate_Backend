@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ssafy.tripmate.reply.dao.ReplyDao">
+
+    <select id="searchAll" resultType="Reply">
+        SELECT *
+        FROM reply
+        where boardId = #{boardId}
+    </select>
+
+    <select id="search" resultType="Reply">
+        SELECT *
+        FROM reply
+        WHERE boardId = #{boardId}
+        and replyId = #{replyId}
+    </select>
+
+    <delete id="remove">
+        DELETE
+        FROM reply
+        WHERE replyId = #{replyId}
+    </delete>
+
+    <update id="update">
+        UPDATE reply
+        SET comment = #{comment}
+        WHERE replyId = #{replyId}
+    </update>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="replyId">
+        INSERT INTO reply (boardId, userId, replyUserID, comment)
+        VALUES (#{boardId}, #{userId}, #{replyUserID}, #{comment})
+    </insert>
+
+</mapper>

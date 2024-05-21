@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class BoardSaveDto {
 
-    private int userId;
+    private Integer userId;
     private String title;
     private String content;
     private String filePath;

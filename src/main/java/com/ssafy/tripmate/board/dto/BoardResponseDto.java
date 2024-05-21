@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 
 @Getter
 public class BoardResponseDto {
-    private int boardId;
-    private int userId;
+    private Integer boardId;
+    private Integer userId;
     private String title;
     private String contents;
     private LocalDateTime modifyDate;

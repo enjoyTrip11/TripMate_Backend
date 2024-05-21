@@ -18,7 +18,7 @@ public class Reply {
     String comment;
 
     public void update(BoardUpdateDto boardUpdateDto) {
-        this.comment = boardUpdateDto.getContents();
+        this.comment = boardUpdateDto.getContent();
     }
 
     @Override

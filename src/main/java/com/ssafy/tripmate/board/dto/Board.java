@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class Board implements Serializable {
-    private int boardId;
-    private int userId;
+    private Integer boardId;
+    private Integer userId;
     private String title;
     private String content;
     private LocalDateTime createDate;
@@ -24,7 +24,7 @@ public class Board implements Serializable {
 
     public void update(BoardUpdateDto boardUpdateDto) {
         this.title = boardUpdateDto.getTitle();
-        this.content = boardUpdateDto.getContents();
+        this.content = boardUpdateDto.getContent();
         this.category = boardUpdateDto.getCategory();
         this.filePath = boardUpdateDto.getFilePath();
     }

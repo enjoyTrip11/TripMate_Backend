@@ -9,7 +9,6 @@
         SELECT *
         FROM plan
         where tripId = #{tripId}
-        group by plan.date
         order by plan.order
     </select>
 

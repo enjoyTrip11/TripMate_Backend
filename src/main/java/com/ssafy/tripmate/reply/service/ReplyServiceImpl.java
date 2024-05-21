@@ -4,6 +4,7 @@ import com.ssafy.tripmate.reply.dao.ReplyDao;
 import com.ssafy.tripmate.reply.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -19,6 +20,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
+    @Transactional
     public int create(ReplySaveDto replySaveDto) {
         try {
             log.debug("[REPLY]insert DTO>>>>> {}", replySaveDto);
@@ -32,6 +34,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
+    @Transactional
     public List<ReplyResponseDto> searchAll(int boardId) {
         try {
             List<Reply> replies = dao.searchAll(boardId);
@@ -44,6 +47,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
+    @Transactional
     public ReplyResponseDto search(int boardId, int replyId) {
         try {
             Reply reply = dao.search(boardId, replyId);
@@ -54,6 +58,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
+    @Transactional
     public int update(int boardId, int replyId, ReplyUpdateDto replyUpdateDto) {
         try {
             Reply reply = dao.search(boardId, replyId);
@@ -69,6 +74,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
+    @Transactional
     public void remove(int boardId, int replyId) {
         try {
             Reply reply = dao.search(boardId, replyId);

@@ -29,4 +29,14 @@ public class SwaggerConfig {
     public GroupedOpenApi repliesApi() {
         return GroupedOpenApi.builder().group("reply").pathsToMatch("/reply/**").build();
     }
+
+    @Bean
+    public GroupedOpenApi placesApi() {
+        return GroupedOpenApi.builder().group("place").pathsToMatch("/place/**").build();
+    }
+
+    @Bean
+    public GroupedOpenApi hotplacesApi() {
+        return GroupedOpenApi.builder().group("hotplace").pathsToMatch("/hotplace/**").build();
+    }
 }

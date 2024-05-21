@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.tripmate.place.dao.HotPlaceDao">
+
+    <select id="searchByLocUser" parameterType="map" resultType="HotPlace">
+        SELECT *
+        FROM hotplace
+                 where locationId = #{locationId}
+        and userId = #{userId}
+    </select>
+
+    <select id="searchById" parameterType="int" resultType="HotPlace">
+        SELECT *
+        FROM hotplace
+        where hotplaceId = #{hotplaceId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO hotplace (userId, locationId)
+        VALUES (#{userId}, #{locationId})
+    </insert>
+
+    <delete id="delete" parameterType="int">
+        DELETE
+        FROM hotplace
+        WHERE hotplaceId = #{hotplaceId}
+    </delete>
+
+    <select id="countHotPlaceHits" resultType="int" parameterType="int">
+        SELECT COUNT(*)
+        FROM hotplace
+        WHERE locationId = #{placeId}
+    </select>
+
+    <select id="searchHotPlaceByUser" resultType="Place" parameterType="int">
+        SELECT l.*
+        FROM location l
+                 JOIN hotplace h ON l.locationId = h.locationId
+        WHERE h.userId = #{userId}
+    </select>
+
+    <select id="searchAllHotPlace" resultType="HotPlaceResponseDto">
+        SELECT l.*, COUNT(h.locationId) AS hits
+        FROM location l
+                 JOIN hotplace h ON l.locationId = h.locationId
+        GROUP BY l.locationId
+    </select>
+
+</mapper>

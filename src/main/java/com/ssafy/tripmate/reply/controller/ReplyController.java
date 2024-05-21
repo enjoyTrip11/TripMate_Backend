@@ -1,5 +1,6 @@
 package com.ssafy.tripmate.reply.controller;
 
+import com.ssafy.tripmate.board.dto.BoardException;
 import com.ssafy.tripmate.reply.dto.ReplyException;
 import com.ssafy.tripmate.reply.dto.ReplyResponseDto;
 import com.ssafy.tripmate.reply.dto.ReplySaveDto;
@@ -28,18 +29,18 @@ public class ReplyController {
         this.service = service;
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        log.error("reply.error >>> msg: {}", e.getMessage());
+    @RestControllerAdvice
+    public class GlobalExceptionHandler {
 
-        HttpHeaders resHeader = new HttpHeaders();
-        resHeader.add("Content-Type", "application/json;charset=UTF-8");
+        @ExceptionHandler(ReplyException.class)
+        public ResponseEntity<String> handleException(ReplyException e) {
+            log.error("reply.error >>> msg: {}", e.getMessage());
 
-        if (e instanceof ReplyException) {
-            return new ResponseEntity<>(e.getMessage(), resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
+            HttpHeaders resHeader = new HttpHeaders();
+            resHeader.add("Content-Type", "application/json;charset=UTF-8");
+
+            return new ResponseEntity<>("reply 처리 중 오류 발생:" + e.getMessage(), resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>("Reply 처리 중 오류 발생", resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("")

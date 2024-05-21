@@ -29,18 +29,13 @@ public class BoardController {
     public class GlobalExceptionHandler {
 
 
-        @ExceptionHandler(Exception.class)
-        public ResponseEntity<String> handleException(Exception e) {
+        @ExceptionHandler(BoardException.class)
+        public ResponseEntity<String> handleException(BoardException e) {
             log.error("board.error >>> msg: {}", e.getMessage());
 
             HttpHeaders resHeader = new HttpHeaders();
             resHeader.add("Content-Type", "application/json;charset=UTF-8");
-
-            if (e instanceof BoardException) {
-                return new ResponseEntity<>(e.getMessage(), resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
-            return new ResponseEntity<>("Board 처리 중 오류 발생", resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Board 처리 중 오류 발생:" + e.getMessage() , resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

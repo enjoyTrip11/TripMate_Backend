@@ -1,7 +1,11 @@
 package com.ssafy.tripmate.trip.controller;
 
 import com.ssafy.tripmate.board.dto.*;
-import com.ssafy.tripmate.board.service.BoardService;
+import com.ssafy.tripmate.plan.dto.Plan;
+import com.ssafy.tripmate.plan.dto.PlanResponseDto;
+import com.ssafy.tripmate.plan.dto.PlanSaveDto;
+import com.ssafy.tripmate.plan.dto.TripResponse;
+import com.ssafy.tripmate.plan.service.PlanService;
 import com.ssafy.tripmate.trip.dto.Trip;
 import com.ssafy.tripmate.trip.dto.TripResponseDto;
 import com.ssafy.tripmate.trip.dto.TripSaveDto;
@@ -24,10 +28,12 @@ import java.util.List;
 @Tag(name = "Trip 컨트롤러", description = "여행 CRUD 관련 클래스")
 public class TripController {
 
-    private final TripService service;
+    private final TripService tripService;
+    private final PlanService planService;
 
-    public TripController(TripService service) {
-        this.service = service;
+    public TripController(TripService tripService, PlanService planService) {
+        this.tripService = tripService;
+        this.planService = planService;
     }
 
     @RestControllerAdvice
@@ -52,7 +58,7 @@ public class TripController {
             @ApiResponse(responseCode = "500", description = "서버 에러")})
     public ResponseEntity<?> loadTrip(
             @RequestParam(required = false) Integer userId) {
-        List<TripResponseDto> trips = service.findAllByUserId(userId);
+        List<TripResponseDto> trips = tripService.findAllByUserId(userId);
         if (trips.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -64,11 +70,13 @@ public class TripController {
             @ApiResponse(responseCode = "204", description = "여행 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
     public ResponseEntity<?> loadTrip(@PathVariable("tripId") int tripId) {
-        Trip trip = service.findByTripId(tripId);
+        Trip trip = tripService.findByTripId(tripId);
+        List<PlanResponseDto> plans = planService.searchAll(tripId);
+        TripResponse tripResponse = new TripResponse(trip, plans);
         if (trip == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(trip, HttpStatus.OK);
+        return new ResponseEntity<>(tripResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{tripId}")
@@ -76,7 +84,7 @@ public class TripController {
             @ApiResponse(responseCode = "400", description = "여행 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
     public ResponseEntity<?> deleteTrip(@PathVariable("tripId") int tripId) {
-        service.delete(tripId);
+        tripService.delete(tripId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -85,14 +93,21 @@ public class TripController {
             @ApiResponse(responseCode = "500", description = "서버 에러")})
     public ResponseEntity<Integer> createTrip(@RequestBody TripSaveDto tripSaveDto) {
         log.debug("[TRIP]insert>>>>>>>>>>>", tripSaveDto);
-        return new ResponseEntity<>(service.insert(tripSaveDto), HttpStatus.OK);
+        return new ResponseEntity<>(tripService.insert(tripSaveDto), HttpStatus.OK);
     }
 
     @PutMapping("/{tripId}")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "여행 정보 수정 성공"),
             @ApiResponse(responseCode = "400", description = "여행 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<Integer> updateBoard(@PathVariable("tripId") int tripId, @RequestBody TripUpdateDto tripUpdateDto) {
-        return new ResponseEntity<>(service.update(tripId, tripUpdateDto), HttpStatus.OK);
+    public ResponseEntity<Integer> updateBoard(@PathVariable("tripId") int tripId, @RequestBody TripUpdateDto tripUpdateDto, @RequestBody List<PlanSaveDto> planSaveDtos) {
+        List<PlanResponseDto> plans = planService.searchAll(tripId);
+        for (PlanResponseDto plan : plans) {
+            planService.remove(plan.getPlanId());
+        }
+        for (PlanSaveDto planSaveDto : planSaveDtos) {
+            planService.create(planSaveDto);
+        }
+        return new ResponseEntity<>(tripService.update(tripId, tripUpdateDto), HttpStatus.OK);
     }
 }

@@ -33,7 +33,7 @@
 
     <update id="update">
         UPDATE trip
-        SET title    = #{title},
+        SET title = #{title},
             place = #{place},
             img = #{img},
             startDate = #{startDate},

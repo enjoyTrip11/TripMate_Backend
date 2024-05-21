@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ssafy.tripmate.reply.dao.PlanDao">
+
+    <select id="searchAll" resultType="Plan">
+        SELECT *
+        FROM plan
+        where tripId = #{tripId}
+        group by plan.date
+        order by plan.order
+    </select>
+
+    <select id="search" resultType="Plan">
+        SELECT *
+        FROM plan
+        WHERE planId = #{planId}
+    </select>
+
+    <delete id="remove">
+        DELETE
+        FROM plan
+        WHERE planId = #{planId}
+    </delete>
+
+    <update id="update">
+        UPDATE plan
+        SET date = #{date},
+            order = #{order}
+        WHERE planId = #{planId}
+    </update>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="planId">
+        INSERT INTO plan (tripId, locationId, date, order)
+        VALUES (#{tripId}, #{locationId}, #{date}, #{order})
+    </insert>
+
+</mapper>

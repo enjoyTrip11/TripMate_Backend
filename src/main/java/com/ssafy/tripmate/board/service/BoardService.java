@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BoardService {
 
-    public List<BoardResponseDto> findAll();
+    public List<BoardResponseDto> findAll(String category, int userId, String keyword);
 
     public List<BoardResponseDto> findAllByUserId(String category, int userId);
 

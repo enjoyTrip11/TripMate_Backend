@@ -5,9 +5,20 @@
 
 <mapper namespace="com.ssafy.tripmate.board.dao.BoardDao">
 
-    <select id="searchAll" resultType="Board">
+    <select id="searchAll" parameterType="map" resultType="Board">
         SELECT *
-        FROM board
+        FROM Board
+        WHERE 1=1
+        <if test="category != null and category != ''">
+            AND category = #{category}
+        </if>
+        <if test="userId != null and userId != 0">
+            AND userId = #{userId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (title LIKE CONCAT('%', #{keyword}, '%') OR contents LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY modifyDate DESC
     </select>
 
     <select id="searchAllByUserId" resultType="Board">

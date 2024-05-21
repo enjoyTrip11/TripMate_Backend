@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface BoardDao {
-    public List<Board> searchAll() throws SQLException;
+    public List<Board> searchAll(String category, int userId, String keyword) throws SQLException;
 
     public List<Board> searchAllByUserId(String category, int userId) throws SQLException;
 

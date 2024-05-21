@@ -1,7 +1,6 @@
 package com.ssafy.tripmate.trip.controller;
 
 import com.ssafy.tripmate.board.dto.*;
-import com.ssafy.tripmate.plan.dto.Plan;
 import com.ssafy.tripmate.plan.dto.PlanResponseDto;
 import com.ssafy.tripmate.plan.dto.PlanSaveDto;
 import com.ssafy.tripmate.plan.dto.TripResponse;
@@ -11,6 +10,9 @@ import com.ssafy.tripmate.trip.dto.TripResponseDto;
 import com.ssafy.tripmate.trip.dto.TripSaveDto;
 import com.ssafy.tripmate.trip.dto.TripUpdateDto;
 import com.ssafy.tripmate.trip.service.TripService;
+import com.ssafy.tripmate.tripInvite.dto.InviteResponseDto;
+import com.ssafy.tripmate.tripInvite.dto.InviteSaveDto;
+import com.ssafy.tripmate.tripInvite.service.InviteService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,10 +32,12 @@ public class TripController {
 
     private final TripService tripService;
     private final PlanService planService;
+    private final InviteService inviteService;
 
-    public TripController(TripService tripService, PlanService planService) {
+    public TripController(TripService tripService, PlanService planService, InviteService inviteService) {
         this.tripService = tripService;
         this.planService = planService;
+        this.inviteService = inviteService;
     }
 
     @RestControllerAdvice
@@ -72,7 +76,8 @@ public class TripController {
     public ResponseEntity<?> loadTrip(@PathVariable("tripId") int tripId) {
         Trip trip = tripService.findByTripId(tripId);
         List<PlanResponseDto> plans = planService.searchAll(tripId);
-        TripResponse tripResponse = new TripResponse(trip, plans);
+        List<InviteResponseDto> invites = inviteService.findAllByTripId(tripId);
+        TripResponse tripResponse = new TripResponse(trip, plans, invites);
         if (trip == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -91,8 +96,11 @@ public class TripController {
     @PostMapping
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "여행 생성 성공"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<Integer> createTrip(@RequestBody TripSaveDto tripSaveDto) {
+    public ResponseEntity<Integer> createTrip(@RequestBody TripSaveDto tripSaveDto, @RequestBody List<InviteSaveDto> inviteSaveDtos) {
         log.debug("[TRIP]insert>>>>>>>>>>>", tripSaveDto);
+        for (InviteSaveDto inviteSaveDto : inviteSaveDtos) {
+            inviteService.insert(inviteSaveDto);
+        }
         return new ResponseEntity<>(tripService.insert(tripSaveDto), HttpStatus.OK);
     }
 
@@ -100,13 +108,16 @@ public class TripController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "여행 정보 수정 성공"),
             @ApiResponse(responseCode = "400", description = "여행 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<Integer> updateBoard(@PathVariable("tripId") int tripId, @RequestBody TripUpdateDto tripUpdateDto, @RequestBody List<PlanSaveDto> planSaveDtos) {
+    public ResponseEntity<Integer> updateBoard(@PathVariable("tripId") int tripId, @RequestBody TripUpdateDto tripUpdateDto, @RequestBody List<InviteSaveDto> inviteSaveDtos, @RequestBody List<PlanSaveDto> planSaveDtos) {
         List<PlanResponseDto> plans = planService.searchAll(tripId);
         for (PlanResponseDto plan : plans) {
             planService.remove(plan.getPlanId());
         }
         for (PlanSaveDto planSaveDto : planSaveDtos) {
             planService.create(planSaveDto);
+        }
+        for (InviteSaveDto inviteSaveDto : inviteSaveDtos) {
+            inviteService.insert(inviteSaveDto);
         }
         return new ResponseEntity<>(tripService.update(tripId, tripUpdateDto), HttpStatus.OK);
     }

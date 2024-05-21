@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ssafy.tripmate.tripInvite.dao.InviteDao">
+
+    <select id="searchAllByTripId" resultType="Invite">
+        SELECT *
+        FROM trip_invite
+        WHERE tripId = #{tripId}
+    </select>
+
+    <select id="searchByInviteId" resultType="Invite">
+        SELECT *
+        FROM trip_invite
+        WHERE inviteId = #{inviteId}
+    </select>
+
+    <delete id="remove">
+        DELETE
+        FROM trip_invite
+        WHERE inviteId = #{inviteId}
+    </delete>
+
+    <update id="update">
+        UPDATE trip_invite
+        SET state = #{state}
+        WHERE inviteId = #{inviteId}
+    </update>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="inviteId">
+        INSERT INTO trip_invite (tripId, receiverId, state)
+        VALUES (#{tripId}, #{receiverId}, #{state})
+    </insert>
+
+</mapper>

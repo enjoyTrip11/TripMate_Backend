@@ -24,4 +24,9 @@ public class SwaggerConfig {
     public GroupedOpenApi booksApi() {
         return GroupedOpenApi.builder().group("board").pathsToMatch("/board/**").build();
     }
+
+    @Bean
+    public GroupedOpenApi repliesApi() {
+        return GroupedOpenApi.builder().group("reply").pathsToMatch("/reply/**").build();
+    }
 }

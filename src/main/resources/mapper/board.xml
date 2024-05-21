@@ -5,19 +5,19 @@
 
 <mapper namespace="com.ssafy.tripmate.board.dao.BoardDao">
 
-    <select id="searchAll" resultType="com.ssafy.tripmate.board.dto.Board">
+    <select id="searchAll" resultType="Board">
         SELECT *
         FROM board
     </select>
 
-    <select id="searchAllByUserId" resultType="com.ssafy.tripmate.board.dto.Board">
+    <select id="searchAllByUserId" resultType="Board">
         SELECT *
         FROM board
         WHERE category = #{category}
           AND userId = #{userId}
     </select>
 
-    <select id="searchAllByKeyword" resultType="com.ssafy.tripmate.board.dto.Board">
+    <select id="searchAllByKeyword" resultType="Board">
         SELECT *
         FROM board
         WHERE category = #{category}
@@ -26,13 +26,13 @@
         </if>
     </select>
 
-    <select id="searchAllByCategory" resultType="com.ssafy.tripmate.board.dto.Board">
+    <select id="searchAllByCategory" resultType="Board">
         SELECT *
         FROM board
         WHERE category = #{category}
     </select>
 
-    <select id="searchByBoardId" resultType="com.ssafy.tripmate.board.dto.Board">
+    <select id="searchByBoardId" resultType="Board">
         SELECT *
         FROM board
         WHERE boardId = #{boardId}

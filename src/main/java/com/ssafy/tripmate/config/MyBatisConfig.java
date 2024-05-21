@@ -18,6 +18,7 @@ public class MyBatisConfig {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
+        sessionFactory.setTypeAliasesPackage("com.ssafy.tripmate.*.dto");
         return sessionFactory.getObject();
     }
 }

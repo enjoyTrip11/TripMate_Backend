@@ -31,8 +31,8 @@
     </update>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="replyId">
-        INSERT INTO reply (boardId, userId, replyUserID, comment)
-        VALUES (#{boardId}, #{userId}, #{replyUserID}, #{comment})
+        INSERT INTO reply (boardId, userId, replyUserId, comment)
+        VALUES (#{boardId}, #{userId}, #{replyUserId}, #{comment})
     </insert>
 
 </mapper>

@@ -2,12 +2,14 @@ package com.ssafy.tripmate.reply.service;
 
 import com.ssafy.tripmate.reply.dao.ReplyDao;
 import com.ssafy.tripmate.reply.dto.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ReplyServiceImpl implements ReplyService {
 
     private final ReplyDao dao;
@@ -19,7 +21,9 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public int create(ReplySaveDto replySaveDto) {
         try {
+            log.debug("[REPLY]insert DTO>>>>> {}", replySaveDto);
             Reply reply = replySaveDto.toEntity();
+            log.debug("[REPLY]insert>>>>>> {}", reply);
             dao.insert(reply);
             return reply.getReplyId();
         } catch (SQLException e) {

@@ -12,10 +12,10 @@
         <if test="keyword != null and keyword != ''">
             AND (title LIKE CONCAT('%', #{keyword}, '%') OR overview LIKE CONCAT('%', #{keyword}, '%'))
         </if>
-        <if test="sidoCode != null">
+        <if test="sidoCode != null and sidoCode != 0">
             AND sidoCode = #{sidoCode}
         </if>
-        <if test="contentTypeId != null">
+        <if test="contentTypeId != null and contentTypeId != 0">
             AND contentTypeId = #{contentTypeId}
         </if>
     </select>

@@ -39,12 +39,12 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 
     @Override
     @Transactional
-    public void remove(int hotplaceId) {
+    public void remove(int locationId, int userId) {
         try {
-            HotPlace hotPlace = dao.searchById(hotplaceId);
-
+            HotPlace hotPlace = dao.searchByLocUser(locationId, userId);
+            log.debug("[HOTPLACE] 지울 Hotplace:" + hotPlace + ", id:" + hotPlace.getHotplaceId());
             if (hotPlace != null) {
-                dao.delete(hotplaceId);
+                dao.delete(hotPlace.getHotplaceId());
             }
         } catch (SQLException e) {
             throw new HotPlaceException(e.getMessage());

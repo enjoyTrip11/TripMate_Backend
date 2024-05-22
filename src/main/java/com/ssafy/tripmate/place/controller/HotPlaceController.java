@@ -73,8 +73,9 @@ public class HotPlaceController {
     @DeleteMapping
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "핫플레이스 삭제 성공"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<?> removeHotPlace(@RequestParam("hotplaceId") int hotplaceId) {
-        service.remove(hotplaceId);
+    public ResponseEntity<?> removeHotPlace(@RequestParam("locationId") int locationId,
+                                            @RequestParam("userId") int userId) {
+        service.remove(locationId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

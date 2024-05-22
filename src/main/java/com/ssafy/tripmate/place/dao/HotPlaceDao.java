@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface HotPlaceDao {
@@ -23,5 +24,5 @@ public interface HotPlaceDao {
 
     List<Place> searchHotPlaceByUser(int userId) throws SQLException;
 
-    List<HotPlaceResponseDto> searchAllHotPlace() throws SQLException;
+    List<Map<String, String>> searchAllHotPlace() throws SQLException;
 }

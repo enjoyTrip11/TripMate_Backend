@@ -84,7 +84,7 @@ public class ReplyController {
     @DeleteMapping("/{replyId}")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "댓글 삭제 성공"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<Integer> removeReply(@RequestParam("boardId") int boardId, @PathVariable("replyId") int replyId, @RequestBody ReplyUpdateDto replyUpdateDto) {
+    public ResponseEntity<Integer> removeReply(@RequestParam("boardId") int boardId, @PathVariable("replyId") int replyId) {
         service.remove(boardId, replyId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

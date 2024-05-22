@@ -21,7 +21,7 @@
     <delete id="remove">
         DELETE
         FROM reply
-        WHERE replyId = #{replyId}
+        WHERE replyId = #{replyId} or replyUserId = #{replyId}
     </delete>
 
     <update id="update">

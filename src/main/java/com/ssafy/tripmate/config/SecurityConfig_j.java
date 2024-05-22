@@ -27,10 +27,10 @@ public class SecurityConfig_j {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     private final String[] AUTH_WHITE_LIST = {
-            "/auth/refresh",
+            "/user/refresh",
             "/member/duplicate",
-            "/auth/signup",
-            "/auth/login",
+            "/user/signup",
+            "/user/login",
             "/v3/**",
             "/swagger-ui/**"
     };

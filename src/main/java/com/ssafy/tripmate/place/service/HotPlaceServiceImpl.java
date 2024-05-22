@@ -1,17 +1,16 @@
 package com.ssafy.tripmate.place.service;
 
 import com.ssafy.tripmate.place.dao.HotPlaceDao;
-import com.ssafy.tripmate.place.dto.HotPlace;
-import com.ssafy.tripmate.place.dto.HotPlaceException;
-import com.ssafy.tripmate.place.dto.HotPlaceResponseDto;
-import com.ssafy.tripmate.place.dto.Place;
+import com.ssafy.tripmate.place.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -89,7 +88,30 @@ public class HotPlaceServiceImpl implements HotPlaceService {
     @Transactional
     public List<HotPlaceResponseDto> sortAllHotPlacesByHits() {
         try {
-            return dao.searchAllHotPlace().stream()
+            List<Map<String, String>> results = dao.searchAllHotPlace();
+            List<HotPlaceResponseDto> places = new ArrayList<>(10);
+            for (Map<String, String> result : results) {
+                int hits = Integer.parseInt(result.get("hits"));
+                PlaceResponseDto placeResponseDto = PlaceResponseDto.builder()
+                        .locationId(Integer.parseInt(result.get("locationId")))
+                        .title(result.get("title"))
+                        .addr1(result.get("addr1"))
+                        .addr2(result.get("addr2"))
+                        .zipcode(result.get("zipcode"))
+                        .firstImage(result.get("firstImage"))
+                        .secondImage(result.get("secondImage"))
+                        .sidoCode(Integer.parseInt(result.get("sidoCode")))
+                        .latitude(Double.parseDouble(result.get("latitude")))
+                        .longitude(Double.parseDouble(result.get("longitude")))
+                        .overview(result.get("overview"))
+                        .contentTypeId(Integer.parseInt(result.get("contentTypeId")))
+                        .build();
+
+                places.add(new HotPlaceResponseDto(hits, placeResponseDto));
+            }
+
+            System.out.println(places);
+            return places.stream()
                     .sorted(Comparator.comparing(HotPlaceResponseDto::getHits).reversed()) // hits를 기준으로 내림차순 정렬
                     .toList();
         } catch (SQLException e) {

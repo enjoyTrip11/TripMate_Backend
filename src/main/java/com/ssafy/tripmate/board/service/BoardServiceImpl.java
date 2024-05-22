@@ -19,13 +19,12 @@ public class BoardServiceImpl implements BoardService {
         this.dao = dao;
     }
 
-
     @Override
     @Transactional
-    public List<BoardResponseDto> findAll() {
+    public List<BoardResponseDto> findAll(String category, int userId, String keyword) {
         try {
-            List<Board> boards = dao.searchAll();
-            return boards.stream()
+            return dao.searchAll(category, userId, keyword)
+                    .stream()
                     .map(BoardResponseDto::new)
                     .toList();
         } catch (SQLException e) {

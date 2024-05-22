@@ -27,8 +27,6 @@ public class BoardController {
 
     @RestControllerAdvice
     public class GlobalExceptionHandler {
-
-
         @ExceptionHandler(BoardException.class)
         public ResponseEntity<String> handleException(BoardException e) {
             log.error("board.error >>> msg: {}", e.getMessage());
@@ -39,40 +37,15 @@ public class BoardController {
         }
     }
 
-
     @GetMapping("")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "게시글 목록 조회 성공"),
             @ApiResponse(responseCode = "204", description = "게시물 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<?> loadBoard() {
-        List<BoardResponseDto> boards = service.findAll();
-        if (boards.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(boards, HttpStatus.OK);
-    }
-
-    @GetMapping("/search/{category}")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "검색어별 게시글 목록 조회 성공"),
-            @ApiResponse(responseCode = "204", description = "게시물 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 에러")})
     public ResponseEntity<?> loadBoard(
-            @PathVariable("category") String category,
-            @RequestParam(required = false) Integer userId,
-            @RequestParam(required = false) String keyword) {
-
-        List<BoardResponseDto> boards;
-        if (userId != null) {
-            // 사용자 ID에 따른 게시글 조회
-            boards = service.findAllByUserId(category, userId);
-        } else if (keyword != null) {
-            // 키워드에 따른 게시글 조회
-            boards = service.findAllByKeyword(category, keyword);
-        } else {
-            // 카테고리에 따른 게시글 조회
-            boards = service.findAllByCategory(category);
-        }
-
+            @RequestParam(name = "category", defaultValue = "") String category,
+            @RequestParam(name = "userId", defaultValue = "0") Integer userId,
+            @RequestParam(name = "keyword", defaultValue = "") String keyword) {
+        List<BoardResponseDto> boards = service.findAll(category, userId, keyword);
         if (boards.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -83,7 +56,7 @@ public class BoardController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "게시물 조회 성공"),
             @ApiResponse(responseCode = "204", description = "게시물 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<?> loadBoard(@PathVariable("boardId") int boardId) {
+    public ResponseEntity<?> findBoard(@PathVariable("boardId") int boardId) {
         Board board = service.findByBoardId(boardId);
         if (board == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

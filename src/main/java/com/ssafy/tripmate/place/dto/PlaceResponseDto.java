@@ -1,8 +1,12 @@
 package com.ssafy.tripmate.place.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
+@Builder
 public class PlaceResponseDto {
     private Integer locationId;
     private String title;

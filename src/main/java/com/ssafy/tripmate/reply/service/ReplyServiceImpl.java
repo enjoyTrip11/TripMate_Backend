@@ -61,6 +61,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Transactional
     public int update(int boardId, int replyId, ReplyUpdateDto replyUpdateDto) {
         try {
+            log.info("[REPLY] Update..............{}",replyUpdateDto.getComment() );
             Reply reply = dao.search(boardId, replyId);
             if (reply==null) {
                 throw new ReplyException("존재하지 않는 댓글입니다");

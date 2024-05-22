@@ -47,30 +47,30 @@ public class oauthController {
         return new RedirectView(authorizationRequest);
     }
 
-    @GetMapping("/login/oauth2/code/google")
-    public String getGoogleAccessToken(@RequestParam("code") String code) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        Map<String, String> params = new HashMap<>();
-        params.put("client_id", clientId);
-        params.put("client_secret", clientSecret);
-        params.put("redirect_uri", redirectUri);
-        params.put("grant_type", "authorization_code");
-        params.put("code", code);
-
-        String accessTokenUrl = "https://oauth2.googleapis.com/token";
-
-        Map<String, Object> response = restTemplate.postForObject(accessTokenUrl, params, Map.class);
-        String accessToken = (String) response.get("access_token");
-
-        // 사용자 정보 요청
-        String userInfoUrl = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
-        Map<String, Object> userInfo = restTemplate.getForObject(userInfoUrl, Map.class);
-
-        // JWT 토큰 생성 및 반환
-        String jwtToken = jwtTokenProvider.generateToken(userInfo.get("email").toString());
-        return jwtToken;  // 클라이언트에 JWT 토큰 반환
-    }
+//    @GetMapping("/login/oauth2/code/google")
+//    public String getGoogleAccessToken(@RequestParam("code") String code) {
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        Map<String, String> params = new HashMap<>();
+//        params.put("client_id", clientId);
+//        params.put("client_secret", clientSecret);
+//        params.put("redirect_uri", redirectUri);
+//        params.put("grant_type", "authorization_code");
+//        params.put("code", code);
+//
+//        String accessTokenUrl = "https://oauth2.googleapis.com/token";
+//
+//        Map<String, Object> response = restTemplate.postForObject(accessTokenUrl, params, Map.class);
+//        String accessToken = (String) response.get("access_token");
+//
+//        // 사용자 정보 요청
+//        String userInfoUrl = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
+//        Map<String, Object> userInfo = restTemplate.getForObject(userInfoUrl, Map.class);
+//
+//        // JWT 토큰 생성 및 반환
+//        String jwtToken = jwtTokenProvider.generateToken(userInfo.get("email").toString());
+//        return jwtToken;  // 클라이언트에 JWT 토큰 반환
+//    }
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {

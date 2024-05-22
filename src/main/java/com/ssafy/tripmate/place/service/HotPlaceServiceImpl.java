@@ -28,7 +28,8 @@ public class HotPlaceServiceImpl implements HotPlaceService {
         try {
             HotPlace hotPlace = dao.searchByLocUser(locationId, userId);
             if (hotPlace != null) {
-                throw new HotPlaceException("이미 등록된 핫플레이스입니다.");
+//                throw new HotPlaceException("이미 등록된 핫플레이스입니다.");
+                return 0;
             }
             dao.insert(locationId, userId);
             return dao.searchByLocUser(locationId, userId).getHotplaceId();
@@ -109,8 +110,6 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 
                 places.add(new HotPlaceResponseDto(hits, placeResponseDto));
             }
-
-            System.out.println(places);
             return places.stream()
                     .sorted(Comparator.comparing(HotPlaceResponseDto::getHits).reversed()) // hits를 기준으로 내림차순 정렬
                     .toList();

@@ -1,68 +1,63 @@
 package com.ssafy.tripmate.config;
 
+import com.ssafy.tripmate.user.jwt.JwtAuthenticationFilter;
+import com.ssafy.tripmate.user.jwt.JwtTokenProvider;
 import com.ssafy.tripmate.user.role.Role;
+import com.ssafy.tripmate.user.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-import com.ssafy.tripmate.user.service.CustomOAuth2UserService;
-
 
 @Configuration
-@EnableWebSecurity 
+@EnableWebSecurity
 public class SecurityConfig {
 
 	private final CustomOAuth2UserService customOAuth2UserService;
-	
-	public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+	private final JwtTokenProvider jwtTokenProvider;
+
+	public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, JwtTokenProvider jwtTokenProvider) {
 		this.customOAuth2UserService = customOAuth2UserService;
+		this.jwtTokenProvider = jwtTokenProvider;
 	}
-	
+
 	@Bean
 	public BCryptPasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-
-		// 접근 권한 설정
 		http
-				.authorizeHttpRequests((auth) -> auth
+				.csrf(csrf -> csrf.disable())
+				.sessionManagement(sessionManagement ->
+						sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				)
+				.formLogin(formLogin -> formLogin.disable())
+				.httpBasic(httpBasic -> httpBasic.disable())
+				.authorizeHttpRequests(authorizeRequests -> authorizeRequests
 						.requestMatchers("/oauth-login/admin").hasRole(Role.USER.name())
 						.requestMatchers("/oauth-login/info").authenticated()
 						.anyRequest().permitAll()
-				);
-
-		// 폼 로그인 방식 설정
-		http
-				.formLogin((auth) -> auth.loginPage("/oauth-login/login")
-						.loginProcessingUrl("/oauth-login/loginProc")
-						.usernameParameter("loginId")
-						.passwordParameter("password")
-						.defaultSuccessUrl("/oauth-login")
-						.failureUrl("/oauth-login")
-						.permitAll());
-
-		// OAuth 2.0 로그인 방식 설정
-		http
-				.oauth2Login((auth) -> auth.loginPage("/oauth-login/login")
+				)
+				.oauth2Login(oauth2Login -> oauth2Login
+						.loginPage("/oauth-login/login")
 						.defaultSuccessUrl("/oauth-login")
 						.failureUrl("/oauth-login/login")
-						.permitAll());
+						.userInfoEndpoint(userInfoEndpointConfig ->
+								userInfoEndpointConfig.userService(customOAuth2UserService)
+						)
+				)
+				.logout(logout -> logout
+						.logoutUrl("/oauth-login/logout")
+				);
 
-		http
-				.logout((auth) -> auth
-						.logoutUrl("/oauth-login/logout"));
-
-		http
-				.csrf((auth) -> auth.disable());
+		http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}

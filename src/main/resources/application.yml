@@ -32,3 +32,7 @@ spring:
   mybatis:
     type-aliases-package: com.ssafy.tripmate.*.dto
     mapper-locations: mapper/*.xml
+
+  app:
+    jwtSecret: 8f3acb3fa2edf84704f54487481eb05b72fdf540635b76999aa62c92ad55e1b4bd1e7c35380c9d877a71fbdf602271ac5115d849c0cadd6cb59218507f8d0906  # Replace this with your actual generated key
+    jwtExpirationMs: 86400000

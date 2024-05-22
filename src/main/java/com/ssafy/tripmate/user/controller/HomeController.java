@@ -1,4 +1,4 @@
-package com.ssafy.tripmate;
+package com.ssafy.tripmate.user.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -4,7 +4,6 @@ import com.ssafy.tripmate.place.dto.PlaceException;
 import com.ssafy.tripmate.place.dto.PlaceResponseDto;
 import com.ssafy.tripmate.place.dto.SearchFilter;
 import com.ssafy.tripmate.place.service.PlaceService;
-import com.ssafy.tripmate.reply.dto.ReplyException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,11 +40,31 @@ public class PlaceController {
         }
     }
 
+//    @GetMapping
+//    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "장소 조회 성공"),
+//            @ApiResponse(responseCode = "204", description = "장소 정보 없음"),
+//            @ApiResponse(responseCode = "500", description = "서버 에러")})
+//    public ResponseEntity<?> findPlaces(@ModelAttribute SearchFilter searchFilter) {
+//        List<PlaceResponseDto> places = service.findAll(searchFilter);
+//        if (places.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>(places, HttpStatus.OK);
+//    }
+
     @GetMapping
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "장소 조회 성공"),
             @ApiResponse(responseCode = "204", description = "장소 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<?> findPlaces(@ModelAttribute SearchFilter searchFilter) {
+    public ResponseEntity<?> findPlaces(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("sidoCode") int sidoCode,
+            @RequestParam("contentTypeId") int contentTypeId,
+            @RequestParam("latitude") double latitude,
+            @RequestParam("longitude") double longitude
+    ) {
+
+        SearchFilter searchFilter = new SearchFilter(keyword, sidoCode, contentTypeId, latitude, longitude);
         List<PlaceResponseDto> places = service.findAll(searchFilter);
         if (places.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

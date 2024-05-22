@@ -1,5 +1,6 @@
 package com.ssafy.tripmate.config;
 
+import com.ssafy.tripmate.user.controller.CustomAuthenticationSuccessHandler;
 import com.ssafy.tripmate.user.jwt.JwtAuthenticationFilter;
 import com.ssafy.tripmate.user.jwt.JwtTokenProvider;
 import com.ssafy.tripmate.user.role.Role;
@@ -20,10 +21,12 @@ public class SecurityConfig {
 
 	private final CustomOAuth2UserService customOAuth2UserService;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
-	public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, JwtTokenProvider jwtTokenProvider) {
+	public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, JwtTokenProvider jwtTokenProvider, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
 		this.customOAuth2UserService = customOAuth2UserService;
 		this.jwtTokenProvider = jwtTokenProvider;
+		this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
 	}
 
 	@Bean
@@ -46,12 +49,13 @@ public class SecurityConfig {
 						.anyRequest().permitAll()
 				)
 				.oauth2Login(oauth2Login -> oauth2Login
-						.loginPage("/oauth-login/login")
-						.defaultSuccessUrl("/oauth-login")
-						.failureUrl("/oauth-login/login")
+						.loginPage("/login/oauth2/code/google")
+						.defaultSuccessUrl("/login/oauth2/code/google")
+						.failureUrl("/fail")
 						.userInfoEndpoint(userInfoEndpointConfig ->
 								userInfoEndpointConfig.userService(customOAuth2UserService)
 						)
+						.successHandler(customAuthenticationSuccessHandler)
 				)
 				.logout(logout -> logout
 						.logoutUrl("/oauth-login/logout")

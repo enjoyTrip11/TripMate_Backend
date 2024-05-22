@@ -27,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("----------------------jwt------------------------");
             System.out.println(jwt);
             System.out.println("----------------------------------------------");
-            if (tokenProvider.validateToken(jwt)) {
+            if (jwt != null && tokenProvider.validateToken(jwt)) {
                 String userId = tokenProvider.getUserIdFromJWT(jwt);
                 System.out.println("----------------------userId------------------------");
                 System.out.println(userId);
@@ -48,7 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String bearerToken = request.getHeader("Authorization");
         System.out.println("--------------------token---------------");
         System.out.println(bearerToken);
-        String newToken = bearerToken.substring(7);
-        return newToken;
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }

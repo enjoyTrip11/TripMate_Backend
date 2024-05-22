@@ -31,6 +31,7 @@ public class SecurityConfig_j {
             "/member/duplicate",
             "/user/signup",
             "/user/login",
+            "/trip/**",
             "/v3/**",
             "/swagger-ui/**"
     };
@@ -39,7 +40,7 @@ public class SecurityConfig_j {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000"); // Vue.js 개발 서버 주소
+        config.addAllowedOrigin("http://localhost:5173"); // Vue.js 개발 서버 주소
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 

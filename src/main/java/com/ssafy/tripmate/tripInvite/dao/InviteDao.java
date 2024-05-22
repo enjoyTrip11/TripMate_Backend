@@ -2,10 +2,12 @@ package com.ssafy.tripmate.tripInvite.dao;
 
 import com.ssafy.tripmate.board.dto.Board;
 import com.ssafy.tripmate.tripInvite.dto.Invite;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Mapper
 public interface InviteDao {
     public List<Invite> searchAllByTripId(Integer tripId) throws SQLException;
 

@@ -1,5 +1,8 @@
 package com.ssafy.tripmate.trip.dto;
 
+import lombok.Getter;
+
+@Getter
 public class TripResponseDto {
     private Integer tripId;
     private Integer writer;

@@ -1,7 +1,10 @@
 package com.ssafy.tripmate.trip.dto;
 
-import com.ssafy.tripmate.board.dto.Board;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@AllArgsConstructor
+@Getter
 public class TripSaveDto {
     private Integer writer;
     private String title;

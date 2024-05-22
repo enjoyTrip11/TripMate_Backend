@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PlanUpdateDto {
     private String date;
-    private Integer order;
+    private Integer planOrder;
 }

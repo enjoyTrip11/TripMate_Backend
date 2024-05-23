@@ -33,6 +33,7 @@ public class SecurityConfig_j {
             "/place/**",
             "/trip/**",
             "/plan/**",
+            "/board/**",
             "/tripInvite/**",
             "/v3/**",
             "/swagger-ui/**"
@@ -55,20 +56,20 @@ public class SecurityConfig_j {
         return http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(h -> h.disable())
-//                .formLogin(f -> f.disable())
-//                .authorizeHttpRequests(
-//                        (x) -> x.requestMatchers(AUTH_WHITE_LIST)
-//                                .permitAll()
-//                                .anyRequest()
-//                                .authenticated()
-//                ).sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-//                .exceptionHandling(
-//                        x -> {
-//                            x.authenticationEntryPoint(jwtAuthenticationEntryPoint);
-//                            x.accessDeniedHandler(jwtAccessDeniedHandler);
-//                        }
-//                )
+                .formLogin(f -> f.disable())
+                .authorizeHttpRequests(
+                        (x) -> x.requestMatchers(AUTH_WHITE_LIST)
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated()
+                ).sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(
+                        x -> {
+                            x.authenticationEntryPoint(jwtAuthenticationEntryPoint);
+                            x.accessDeniedHandler(jwtAccessDeniedHandler);
+                        }
+                )
                 .build();
     }
 

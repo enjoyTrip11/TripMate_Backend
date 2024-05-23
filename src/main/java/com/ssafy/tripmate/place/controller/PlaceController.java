@@ -61,11 +61,9 @@ public class PlaceController {
             @RequestParam(name = "sidoCode", defaultValue = "0") int sidoCode,
             @RequestParam(name = "contentTypeId", defaultValue = "0") int contentTypeId,
             @RequestParam(name = "latitude", defaultValue = "0") double latitude,
-            @RequestParam(name = "longitude", defaultValue = "0") double longitude,
-            @RequestParam(name = "userId") int userId
+            @RequestParam(name = "longitude", defaultValue = "0") double longitude
     ) {
-
-        SearchFilter searchFilter = new SearchFilter(userId, keyword, sidoCode, contentTypeId, latitude, longitude);
+        SearchFilter searchFilter = new SearchFilter(18, keyword, sidoCode, contentTypeId, latitude, longitude);
         List<PlaceResponseDto> places = service.findAll(searchFilter);
         if (places.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

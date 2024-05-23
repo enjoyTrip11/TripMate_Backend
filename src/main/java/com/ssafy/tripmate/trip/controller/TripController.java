@@ -115,6 +115,7 @@ public class TripController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Transactional
     @PutMapping("/{tripId}")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "여행 정보 수정 성공"),
             @ApiResponse(responseCode = "400", description = "여행 정보 없음"),
@@ -128,10 +129,15 @@ public class TripController {
             planService.remove(plan.getPlanId());
         }
         for (PlanSaveDto planSaveDto : planSaveDtos) {
+            planSaveDto.setTripId(tripId);
             planService.create(planSaveDto);
         }
-        for (InviteSaveDto inviteSaveDto : inviteSaveDtos) {
-            inviteService.insert(inviteSaveDto);
+        if(inviteSaveDtos != null) {
+            for (InviteSaveDto inviteSaveDto : inviteSaveDtos) {
+                inviteSaveDto.setTripId(tripId);
+                inviteSaveDto.setState("PENDING");
+                inviteService.insert(inviteSaveDto);
+            }
         }
         return new ResponseEntity<>(tripService.update(tripId, tripUpdateDto), HttpStatus.OK);
     }

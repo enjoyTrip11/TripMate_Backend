@@ -42,8 +42,8 @@ public class HotPlaceController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "핫플레이스 조회 성공"),
             @ApiResponse(responseCode = "204", description = "핫플레이스 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<?> findAllHotPlaces() {
-        List<HotPlaceResponseDto> hotPlaces = service.sortAllHotPlacesByHits();
+    public ResponseEntity<?> findAllHotPlaces(@RequestParam("userId") int userId) {
+        List<HotPlaceResponseDto> hotPlaces = service.sortAllHotPlacesByHits(userId);
         if (hotPlaces.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

@@ -22,5 +22,5 @@ public interface HotPlaceDao {
 
     List<Place> searchHotPlaceByUser(int userId) throws SQLException;
 
-    List<Map<String, String>> searchAllHotPlace() throws SQLException;
+    List<Map<String, String>> searchAllHotPlace(int userId) throws SQLException;
 }

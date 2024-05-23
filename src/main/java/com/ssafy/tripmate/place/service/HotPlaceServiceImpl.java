@@ -87,13 +87,14 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 
     @Override
     @Transactional
-    public List<HotPlaceResponseDto> sortAllHotPlacesByHits() {
+    public List<HotPlaceResponseDto> sortAllHotPlacesByHits(int userId) {
         try {
-            List<Map<String, String>> results = dao.searchAllHotPlace();
+            List<Map<String, String>> results = dao.searchAllHotPlace(userId);
             List<HotPlaceResponseDto> places = new ArrayList<>(10);
             for (Map<String, String> result : results) {
                 int hits = Integer.parseInt(result.get("hits"));
                 PlaceResponseDto placeResponseDto = PlaceResponseDto.builder()
+                        .isFavorite(Boolean.parseBoolean(result.get("isFavorite")))
                         .locationId(Integer.parseInt(result.get("locationId")))
                         .title(result.get("title"))
                         .addr1(result.get("addr1"))

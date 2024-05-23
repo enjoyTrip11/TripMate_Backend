@@ -11,5 +11,5 @@ public interface HotPlaceService {
 
     List<HotPlaceResponseDto> sortUserHotPlacesByHits(int userId);
 
-    List<HotPlaceResponseDto> sortAllHotPlacesByHits();
+    List<HotPlaceResponseDto> sortAllHotPlacesByHits(int userId);
 }

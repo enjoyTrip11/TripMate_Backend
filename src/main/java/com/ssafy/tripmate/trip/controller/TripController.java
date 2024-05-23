@@ -60,8 +60,10 @@ public class TripController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "여행 목록 조회 성공"),
             @ApiResponse(responseCode = "204", description = "여행 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<?> loadTrip(
-            @RequestParam(required = false) Integer userId) {
+    public ResponseEntity<?> loadTrip() {
+        Integer userId = userService.getMemberByJwt().getUserId();
+        System.out.println("HERE22_____________________");
+        System.out.println(userId);
         List<TripResponseDto> trips = tripService.findAllByUserId(userId);
         if (trips.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

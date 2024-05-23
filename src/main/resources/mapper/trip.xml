@@ -15,8 +15,8 @@
         WHERE writer = #{userId}
         UNION
         SELECT t.* FROM trip t
-        JOIN trip_invite ti ON t.trip_id = ti.trip_id
-        WHERE ti.receiver = #{userId} AND ti.state = 'friend';
+        JOIN trip_invite ti ON t.tripId = ti.tripId
+        WHERE ti.receiverId = #{userId} AND ti.state = 'friend';
     </select>
 
     <select id="searchByTripId" resultType="Trip">

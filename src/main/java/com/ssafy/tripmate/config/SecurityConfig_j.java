@@ -32,6 +32,8 @@ public class SecurityConfig_j {
             "/user/**",
             "/place/**",
             "/trip/**",
+            "/plan/**",
+            "/tripInvite/**",
             "/v3/**",
             "/swagger-ui/**"
     };

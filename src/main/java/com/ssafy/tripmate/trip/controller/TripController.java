@@ -1,18 +1,15 @@
 package com.ssafy.tripmate.trip.controller;
 
-import com.ssafy.tripmate.board.dto.*;
 import com.ssafy.tripmate.plan.dto.PlanResponseDto;
 import com.ssafy.tripmate.plan.dto.PlanSaveDto;
 import com.ssafy.tripmate.plan.dto.TripResponse;
 import com.ssafy.tripmate.plan.service.PlanService;
-import com.ssafy.tripmate.trip.dto.Trip;
-import com.ssafy.tripmate.trip.dto.TripResponseDto;
-import com.ssafy.tripmate.trip.dto.TripSaveDto;
-import com.ssafy.tripmate.trip.dto.TripUpdateDto;
+import com.ssafy.tripmate.trip.dto.*;
 import com.ssafy.tripmate.trip.service.TripService;
 import com.ssafy.tripmate.tripInvite.dto.InviteResponseDto;
 import com.ssafy.tripmate.tripInvite.dto.InviteSaveDto;
 import com.ssafy.tripmate.tripInvite.service.InviteService;
+import com.ssafy.tripmate.user.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,23 +31,25 @@ public class TripController {
     private final TripService tripService;
     private final PlanService planService;
     private final InviteService inviteService;
+    private final UserService userService;
 
-    public TripController(TripService tripService, PlanService planService, InviteService inviteService) {
+    public TripController(TripService tripService, PlanService planService, InviteService inviteService, UserService userService) {
         this.tripService = tripService;
         this.planService = planService;
         this.inviteService = inviteService;
+        this.userService = userService;
     }
 
     @RestControllerAdvice
     public class GlobalExceptionHandler {
-        @ExceptionHandler(Exception.class)
+        @ExceptionHandler(TripException.class)
         public ResponseEntity<String> handleException(Exception e) {
-            log.error("board.error >>> msg: {}", e.getMessage());
+            log.error("trip.error >>> msg: {}", e.getMessage());
 
             HttpHeaders resHeader = new HttpHeaders();
             resHeader.add("Content-Type", "application/json;charset=UTF-8");
 
-            if (e instanceof BoardException) {
+            if (e instanceof TripException) {
                 return new ResponseEntity<>(e.getMessage(), resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
             }
             return new ResponseEntity<>("Trip 처리 중 오류 발생", resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -60,8 +60,10 @@ public class TripController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "여행 목록 조회 성공"),
             @ApiResponse(responseCode = "204", description = "여행 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<?> loadTrip(
-            @RequestParam(required = false) Integer userId) {
+    public ResponseEntity<?> loadTrip() {
+        Integer userId = userService.getMemberByJwt().getUserId();
+        System.out.println("HERE22_____________________");
+        System.out.println(userId);
         List<TripResponseDto> trips = tripService.findAllByUserId(userId);
         if (trips.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -93,22 +95,34 @@ public class TripController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Transactional
     @PostMapping
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "여행 생성 성공"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<Integer> createTrip(@RequestBody TripSaveDto tripSaveDto, @RequestBody List<InviteSaveDto> inviteSaveDtos) {
+    public ResponseEntity<Integer> createTrip(@RequestBody TripInsertRequestDto tripRequestDto) {
+        TripSaveDto tripSaveDto = tripRequestDto.getTripSaveDto();
+        tripSaveDto.setWriter(userService.getMemberByJwt().getUserId());
+        System.out.println("HERE_____________________");
+        System.out.println(tripSaveDto.getWriter());
+        int tripId = tripService.insert(tripSaveDto);
+                List<InviteSaveDto> inviteSaveDtos = tripRequestDto.getInviteSaveDtoList();
         log.debug("[TRIP]insert>>>>>>>>>>>", tripSaveDto);
         for (InviteSaveDto inviteSaveDto : inviteSaveDtos) {
+            inviteSaveDto.setTripId(tripId);
+            inviteSaveDto.setState("PENDING");
             inviteService.insert(inviteSaveDto);
         }
-        return new ResponseEntity<>(tripService.insert(tripSaveDto), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{tripId}")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "여행 정보 수정 성공"),
             @ApiResponse(responseCode = "400", description = "여행 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<Integer> updateBoard(@PathVariable("tripId") int tripId, @RequestBody TripUpdateDto tripUpdateDto, @RequestBody List<InviteSaveDto> inviteSaveDtos, @RequestBody List<PlanSaveDto> planSaveDtos) {
+    public ResponseEntity<Integer> updateTrip(@PathVariable("tripId") int tripId, @RequestBody TripUpdateRequestDto tripRequestDto) {
+        TripUpdateDto tripUpdateDto = tripRequestDto.getTripUpdateDto();
+        List<InviteSaveDto> inviteSaveDtos = tripRequestDto.getInviteSaveDtoList();
+        List<PlanSaveDto> planSaveDtos = tripRequestDto.getPlanSaveDtoList();
         List<PlanResponseDto> plans = planService.searchAll(tripId);
         for (PlanResponseDto plan : plans) {
             planService.remove(plan.getPlanId());

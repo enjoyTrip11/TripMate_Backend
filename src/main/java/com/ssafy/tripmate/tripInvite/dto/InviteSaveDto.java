@@ -1,6 +1,12 @@
 package com.ssafy.tripmate.tripInvite.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+@AllArgsConstructor
+@Getter
+@Setter
 public class InviteSaveDto {
     private Integer tripId;
     private Integer receiverId;

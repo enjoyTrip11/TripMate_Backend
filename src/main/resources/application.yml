@@ -24,10 +24,15 @@ spring:
   mybatis:
     type-aliases-package: com.ssafy.tripmate.*.dto
     mapper-locations: mapper/*.xml
-
-
+    
+jwt:
+  secret: 6d0082d38e23cbc624b92b980b91e410de944f2dac5d6bfdca12f3a1a314703e50abe4fe18f958101b56434e593fd3bf8194502b6e1ab3a86c132accbc424ad4
+  
 logging:
   level:
-    root: debug
-#      org.springframework.web: DEBUG
-#      com.ssafy: DEBUG
+    root: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    com.ssafy: DEBUG
+

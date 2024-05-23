@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,14 +32,14 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public List<PlanResponseDto> searchAll(int planId) {
+    public List<PlanResponseDto> searchAll(int tripId) {
         try {
-            List<Plan> plans = dao.searchAll(planId);
+            List<Plan> plans = dao.searchAll(tripId);
             return plans.stream()
                     .map(PlanResponseDto::new)
                     .toList();
         } catch (SQLException e) {
-            throw new PlanException(e.getMessage());
+            return new ArrayList<>();
         }
     }
 

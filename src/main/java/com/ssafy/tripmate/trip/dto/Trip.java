@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Builder
-public class Trip {
+public class Trip implements Serializable {
     private Integer tripId;
     private Integer writer;
     private String title;

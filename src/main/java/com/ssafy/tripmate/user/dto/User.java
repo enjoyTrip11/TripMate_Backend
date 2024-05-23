@@ -31,6 +31,9 @@ public class User {
     @Column(nullable = false)
     private String id;
 
+    @Column(nullable = false)
+    private String password;
+
     @Column
     private String profile;
 
@@ -39,9 +42,10 @@ public class User {
     private Role role;
 
     @Builder
-    public User(String name, String id, String profile, Role role){
+    public User(String name, String id, String password, String profile, Role role){
         this.name = name;
         this.id = id;
+        this.password = password;
         this.profile = profile;
         this.role = role;
     }
@@ -51,9 +55,5 @@ public class User {
         this.profile = profile;
 
         return this;
-    }
-
-    public String getRoleKey(){
-        return this.role.getKey();
     }
 }

@@ -1,10 +1,7 @@
 package com.ssafy.tripmate.tripInvite.controller;
 
 import com.ssafy.tripmate.board.dto.*;
-import com.ssafy.tripmate.tripInvite.dto.Invite;
-import com.ssafy.tripmate.tripInvite.dto.InviteResponseDto;
-import com.ssafy.tripmate.tripInvite.dto.InviteSaveDto;
-import com.ssafy.tripmate.tripInvite.dto.InviteUpdateDto;
+import com.ssafy.tripmate.tripInvite.dto.*;
 import com.ssafy.tripmate.tripInvite.service.InviteService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -35,16 +32,16 @@ public class InviteController {
 
         @ExceptionHandler(Exception.class)
         public ResponseEntity<String> handleException(Exception e) {
-            log.error("board.error >>> msg: {}", e.getMessage());
+            log.error("invite.error >>> msg: {}", e.getMessage());
 
             HttpHeaders resHeader = new HttpHeaders();
             resHeader.add("Content-Type", "application/json;charset=UTF-8");
 
-            if (e instanceof BoardException) {
+            if (e instanceof InviteException) {
                 return new ResponseEntity<>(e.getMessage(), resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
-            return new ResponseEntity<>("Board 처리 중 오류 발생", resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("초대 처리 중 오류 발생", resHeader, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

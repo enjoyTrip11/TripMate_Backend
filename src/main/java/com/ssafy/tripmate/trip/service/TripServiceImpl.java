@@ -2,6 +2,7 @@ package com.ssafy.tripmate.trip.service;
 
 import com.ssafy.tripmate.trip.dao.TripDao;
 import com.ssafy.tripmate.trip.dto.*;
+import com.ssafy.tripmate.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

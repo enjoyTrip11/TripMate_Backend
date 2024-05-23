@@ -8,13 +8,13 @@ public class PlanResponseDto {
     private Integer tripId;
     private Integer locationId;
     private String date;
-    private Integer order;
+    private Integer planOrder;
 
     public PlanResponseDto(Plan plan) {
         this.planId = plan.getPlanId();
         this.tripId = plan.getTripId();
         this.locationId = plan.getLocationId();
         this.date = plan.getDate();
-        this.order = plan.getOrder();
+        this.planOrder = plan.getPlanOrder();
     }
 }

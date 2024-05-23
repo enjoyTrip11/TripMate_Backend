@@ -11,14 +11,14 @@ public class PlanSaveDto {
     private Integer tripId;
     private Integer locationId;
     private String date;
-    private Integer order;
+    private Integer planOrder;
 
     public Plan toEntity() {
         return Plan.builder()
                 .tripId(tripId)
                 .locationId(locationId)
                 .date(date)
-                .order(order)
+                .planOrder(planOrder)
                 .build();
     }
 
@@ -28,7 +28,7 @@ public class PlanSaveDto {
         sb.append("tripId=").append(tripId);
         sb.append(", locationId=").append(locationId);
         sb.append(", date=").append(date);
-        sb.append(", order='").append(order).append('\'');
+        sb.append(", planOrder='").append(planOrder).append('\'');
         sb.append('}');
         return sb.toString();
     }

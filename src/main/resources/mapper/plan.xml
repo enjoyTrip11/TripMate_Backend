@@ -3,13 +3,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="com.ssafy.tripmate.reply.dao.PlanDao">
+<mapper namespace="com.ssafy.tripmate.plan.dao.PlanDao">
 
     <select id="searchAll" resultType="Plan">
         SELECT *
         FROM plan
         where tripId = #{tripId}
-        order by plan.order
+        order by planOrder
     </select>
 
     <select id="search" resultType="Plan">
@@ -27,13 +27,13 @@
     <update id="update">
         UPDATE plan
         SET date = #{date},
-            order = #{order}
+            planOrder = #{planOrder}
         WHERE planId = #{planId}
     </update>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="planId">
-        INSERT INTO plan (tripId, locationId, date, order)
-        VALUES (#{tripId}, #{locationId}, #{date}, #{order})
+        INSERT INTO plan (tripId, locationId, date, planOrder)
+        VALUES (#{tripId}, #{locationId}, #{date}, #{planOrder})
     </insert>
 
 </mapper>

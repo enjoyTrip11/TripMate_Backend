@@ -1,7 +1,9 @@
 package com.ssafy.tripmate.plan.dao;
 
+
 import com.ssafy.tripmate.plan.dto.Plan;
 import org.apache.ibatis.annotations.Mapper;
+
 
 import java.sql.SQLException;
 import java.util.List;

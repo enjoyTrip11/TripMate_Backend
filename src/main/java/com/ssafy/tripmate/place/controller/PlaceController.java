@@ -58,10 +58,10 @@ public class PlaceController {
             @ApiResponse(responseCode = "500", description = "서버 에러")})
     public ResponseEntity<?> findPlaces(
             @RequestParam("keyword") String keyword,
-            @RequestParam("sidoCode") int sidoCode,
-            @RequestParam("contentTypeId") int contentTypeId,
-            @RequestParam("latitude") double latitude,
-            @RequestParam("longitude") double longitude
+            @RequestParam(name = "sidoCode", defaultValue = "0") int sidoCode,
+            @RequestParam(name = "contentTypeId", defaultValue = "0") int contentTypeId,
+            @RequestParam(name = "latitude", defaultValue = "0") double latitude,
+            @RequestParam(name = "longitude", defaultValue = "0") double longitude
     ) {
 
         SearchFilter searchFilter = new SearchFilter(keyword, sidoCode, contentTypeId, latitude, longitude);

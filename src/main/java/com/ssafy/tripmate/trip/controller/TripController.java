@@ -9,6 +9,7 @@ import com.ssafy.tripmate.trip.service.TripService;
 import com.ssafy.tripmate.tripInvite.dto.InviteResponseDto;
 import com.ssafy.tripmate.tripInvite.dto.InviteSaveDto;
 import com.ssafy.tripmate.tripInvite.service.InviteService;
+import com.ssafy.tripmate.user.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,11 +31,13 @@ public class TripController {
     private final TripService tripService;
     private final PlanService planService;
     private final InviteService inviteService;
+    private final UserService userService;
 
-    public TripController(TripService tripService, PlanService planService, InviteService inviteService) {
+    public TripController(TripService tripService, PlanService planService, InviteService inviteService, UserService userService) {
         this.tripService = tripService;
         this.planService = planService;
         this.inviteService = inviteService;
+        this.userService = userService;
     }
 
     @RestControllerAdvice
@@ -96,13 +99,18 @@ public class TripController {
             @ApiResponse(responseCode = "500", description = "서버 에러")})
     public ResponseEntity<Integer> createTrip(@RequestBody TripInsertRequestDto tripRequestDto) {
         TripSaveDto tripSaveDto = tripRequestDto.getTripSaveDto();
-        List<InviteSaveDto> inviteSaveDtos = tripRequestDto.getInviteSaveDtoList();
+        tripSaveDto.setWriter(userService.getMemberByJwt().getUserId());
+        System.out.println("HERE_____________________");
+        System.out.println(tripSaveDto.getWriter());
+        int tripId = tripService.insert(tripSaveDto);
+                List<InviteSaveDto> inviteSaveDtos = tripRequestDto.getInviteSaveDtoList();
         log.debug("[TRIP]insert>>>>>>>>>>>", tripSaveDto);
         for (InviteSaveDto inviteSaveDto : inviteSaveDtos) {
+            inviteSaveDto.setTripId(tripId);
             inviteSaveDto.setState("PENDING");
             inviteService.insert(inviteSaveDto);
         }
-        return new ResponseEntity<>(tripService.insert(tripSaveDto), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{tripId}")

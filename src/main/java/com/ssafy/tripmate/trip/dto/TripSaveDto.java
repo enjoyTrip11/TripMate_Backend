@@ -2,9 +2,11 @@ package com.ssafy.tripmate.trip.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
+@Setter
 public class TripSaveDto {
     private Integer writer;
     private String title;

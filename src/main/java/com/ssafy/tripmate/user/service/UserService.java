@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -110,8 +111,15 @@ public class UserService {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
-    public User getMemberById(Integer id) {
+    public User getMemberById(String id) {
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+    public User getMemberByName(String name) {
+        return userRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<User> getAllList() {
+        return userRepository.findAll();
+    }
 }

@@ -10,8 +10,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberResponse {
-    private Integer memberId;
-    private String nickname;
-    private String email;
+    private Integer userId;
+    private String name;
+    private String id;
     private String password;
+    private String profile;
 }

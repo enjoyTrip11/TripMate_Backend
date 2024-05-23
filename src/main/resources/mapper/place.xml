@@ -44,4 +44,10 @@
         </if>
     </select>
 
+    <select id="getPlaceById" parameterType="Integer" resultType="PlaceResponseDto">
+        SELECT *
+        FROM location
+        WHERE locationId = #{locationId}
+    </select>
+
 </mapper>

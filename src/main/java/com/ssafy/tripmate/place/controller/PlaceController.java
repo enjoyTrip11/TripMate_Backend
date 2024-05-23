@@ -70,4 +70,19 @@ public class PlaceController {
         }
         return new ResponseEntity<>(places, HttpStatus.OK);
     }
+
+    @GetMapping("/{locationId}")
+    public ResponseEntity<PlaceResponseDto> getPlaceById(@PathVariable("locationId") Integer locationId) {
+        try {
+            // locationId에 해당하는 장소 정보를 데이터베이스에서 조회하여 반환
+            PlaceResponseDto place = service.getPlaceById(locationId);
+            if (place != null) {
+                return ResponseEntity.ok(place);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

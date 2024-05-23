@@ -58,6 +58,18 @@ public class PlaceServiceImpl implements PlaceService {
         }
     }
 
+    @Override
+    @Transactional
+    public PlaceResponseDto getPlaceById(Integer locationId) {
+        try {
+            PlaceResponseDto place = dao.getPlaceById(locationId);
+            return place;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new PlaceException(e.getMessage());
+        }
+    }
+
     public List<PlaceResponseDto> sortByHaversine(List<PlaceResponseDto> places, double userLatitude, double userLongitude) {
         try {
             Collections.sort(places, (o1, o2) -> Double.compare(

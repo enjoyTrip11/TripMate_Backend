@@ -63,5 +63,4 @@
                  ) sub
                      JOIN location loc ON loc.locationId = sub.locationId
     </select>
-
 </mapper>

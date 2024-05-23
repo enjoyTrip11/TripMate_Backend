@@ -21,12 +21,13 @@ spring:
   thymeleaf:
     cache: false
 
-  logging:
-    level:
-      root: DEBUG
-      org.springframework.web: DEBUG
-      com.ssafy: DEBUG
-
   mybatis:
     type-aliases-package: com.ssafy.tripmate.*.dto
     mapper-locations: mapper/*.xml
+
+
+logging:
+  level:
+    root: debug
+#      org.springframework.web: DEBUG
+#      com.ssafy: DEBUG

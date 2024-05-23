@@ -1,6 +1,7 @@
 package com.ssafy.tripmate.place.dao;
 
 import com.ssafy.tripmate.place.dto.Place;
+import com.ssafy.tripmate.place.dto.PlaceResponseDto;
 import com.ssafy.tripmate.place.dto.SearchFilter;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -9,5 +10,5 @@ import java.util.List;
 
 @Mapper
 public interface PlaceDao {
-    List<Place> searchAll(SearchFilter filter) throws SQLException;
+    List<PlaceResponseDto> searchAll(SearchFilter filter) throws SQLException;
 }

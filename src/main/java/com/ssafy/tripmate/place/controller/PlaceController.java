@@ -57,14 +57,15 @@ public class PlaceController {
             @ApiResponse(responseCode = "204", description = "장소 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
     public ResponseEntity<?> findPlaces(
-            @RequestParam("keyword") String keyword,
+            @RequestParam(name="keyword", defaultValue = "") String keyword,
             @RequestParam(name = "sidoCode", defaultValue = "0") int sidoCode,
             @RequestParam(name = "contentTypeId", defaultValue = "0") int contentTypeId,
             @RequestParam(name = "latitude", defaultValue = "0") double latitude,
-            @RequestParam(name = "longitude", defaultValue = "0") double longitude
+            @RequestParam(name = "longitude", defaultValue = "0") double longitude,
+            @RequestParam(name = "userId") int userId
     ) {
 
-        SearchFilter searchFilter = new SearchFilter(keyword, sidoCode, contentTypeId, latitude, longitude);
+        SearchFilter searchFilter = new SearchFilter(userId, keyword, sidoCode, contentTypeId, latitude, longitude);
         List<PlaceResponseDto> places = service.findAll(searchFilter);
         if (places.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

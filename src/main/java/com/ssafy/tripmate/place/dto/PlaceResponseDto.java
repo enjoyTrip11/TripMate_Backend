@@ -1,13 +1,14 @@
 package com.ssafy.tripmate.place.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@Setter
 public class PlaceResponseDto {
+    private Boolean isFavorite;
     private Integer locationId;
     private String title;
     private String addr1;

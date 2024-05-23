@@ -41,27 +41,36 @@
         WHERE h.userId = #{userId}
     </select>
 
-    <select id="searchAllHotPlace" resultType="map">
-            SELECT CAST(sub.hits AS CHAR) AS hits,
-                   CAST(loc.locationId AS CHAR) AS locationId,
-                   CAST(loc.title AS CHAR) AS title,
-                   CAST(loc.addr1 AS CHAR) AS addr1,
-                   CAST(loc.addr2 AS CHAR) AS addr2,
-                   CAST(loc.zipcode AS CHAR) AS zipcode,
-                   CAST(loc.firstImage AS CHAR) AS firstImage,
-                   CAST(loc.secondImage AS CHAR) AS secondImage,
-                   CAST(loc.sidoCode AS CHAR) AS sidoCode,
-                   CAST(loc.latitude AS CHAR) AS latitude,
-                   CAST(loc.longitude AS CHAR) AS longitude,
-                   CAST(loc.overview AS CHAR) AS overview,
-                   CAST(loc.contentTypeId AS CHAR) AS contentTypeId
-            FROM (
-                     SELECT COUNT(h.locationId) AS hits, l.locationId
-                     FROM location l
-                              JOIN hotplace h ON l.locationId = h.locationId
-                     GROUP BY l.locationId
-                 ) sub
-                     JOIN location loc ON loc.locationId = sub.locationId
+    <select id="searchAllHotPlace" parameterType="int" resultType="map">
+        SELECT
+            CAST(sub.hits AS CHAR) AS hits,
+            CAST(loc.locationId AS CHAR) AS locationId,
+            CAST(loc.title AS CHAR) AS title,
+            CAST(loc.addr1 AS CHAR) AS addr1,
+            CAST(loc.addr2 AS CHAR) AS addr2,
+            CAST(loc.zipcode AS CHAR) AS zipcode,
+            CAST(loc.firstImage AS CHAR) AS firstImage,
+            CAST(loc.secondImage AS CHAR) AS secondImage,
+            CAST(loc.sidoCode AS CHAR) AS sidoCode,
+            CAST(loc.latitude AS CHAR) AS latitude,
+            CAST(loc.longitude AS CHAR) AS longitude,
+            CAST(loc.overview AS CHAR) AS overview,
+            CAST(loc.contentTypeId AS CHAR) AS contentTypeId,
+            CASE
+                WHEN f.userId IS NOT NULL THEN 'true'
+                ELSE 'false'
+                END AS isFavorite
+        FROM (
+                 SELECT
+                     COUNT(h.locationId) AS hits,
+                     l.locationId
+                 FROM
+                     location l
+                         JOIN hotplace h ON l.locationId = h.locationId
+                 GROUP BY
+                     l.locationId
+             ) sub
+                 JOIN location loc ON loc.locationId = sub.locationId
+                 LEFT JOIN hotplace f ON loc.locationId = f.locationId AND f.userId = #{userId}
     </select>
-
 </mapper>

@@ -28,7 +28,8 @@ public class HotPlaceServiceImpl implements HotPlaceService {
         try {
             HotPlace hotPlace = dao.searchByLocUser(locationId, userId);
             if (hotPlace != null) {
-                throw new HotPlaceException("이미 등록된 핫플레이스입니다.");
+//                throw new HotPlaceException("이미 등록된 핫플레이스입니다.");
+                return 0;
             }
             dao.insert(locationId, userId);
             return dao.searchByLocUser(locationId, userId).getHotplaceId();
@@ -39,12 +40,12 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 
     @Override
     @Transactional
-    public void remove(int hotplaceId) {
+    public void remove(int locationId, int userId) {
         try {
-            HotPlace hotPlace = dao.searchById(hotplaceId);
-
+            HotPlace hotPlace = dao.searchByLocUser(locationId, userId);
+            log.debug("[HOTPLACE] 지울 Hotplace:" + hotPlace + ", id:" + hotPlace.getHotplaceId());
             if (hotPlace != null) {
-                dao.delete(hotplaceId);
+                dao.delete(hotPlace.getHotplaceId());
             }
         } catch (SQLException e) {
             throw new HotPlaceException(e.getMessage());
@@ -86,13 +87,14 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 
     @Override
     @Transactional
-    public List<HotPlaceResponseDto> sortAllHotPlacesByHits() {
+    public List<HotPlaceResponseDto> sortAllHotPlacesByHits(int userId) {
         try {
-            List<Map<String, String>> results = dao.searchAllHotPlace();
+            List<Map<String, String>> results = dao.searchAllHotPlace(userId);
             List<HotPlaceResponseDto> places = new ArrayList<>(10);
             for (Map<String, String> result : results) {
                 int hits = Integer.parseInt(result.get("hits"));
                 PlaceResponseDto placeResponseDto = PlaceResponseDto.builder()
+                        .isFavorite(Boolean.parseBoolean(result.get("isFavorite")))
                         .locationId(Integer.parseInt(result.get("locationId")))
                         .title(result.get("title"))
                         .addr1(result.get("addr1"))
@@ -109,8 +111,6 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 
                 places.add(new HotPlaceResponseDto(hits, placeResponseDto));
             }
-
-            System.out.println(places);
             return places.stream()
                     .sorted(Comparator.comparing(HotPlaceResponseDto::getHits).reversed()) // hits를 기준으로 내림차순 정렬
                     .toList();

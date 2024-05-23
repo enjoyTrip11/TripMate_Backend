@@ -48,16 +48,17 @@ public class PlaceServiceImpl implements PlaceService {
             double userLat = searchFilter.getLatitude();
             double userLon = searchFilter.getLongitude();
 
-            List<Place> places = sortByHaversine(dao.searchAll(searchFilter), userLat, userLon);
-            return places.stream()
-                    .map(PlaceResponseDto::new)
-                    .toList();
+            List<PlaceResponseDto> places = sortByHaversine(dao.searchAll(searchFilter), userLat, userLon);
+            log.info("!!!!!searcFilter" + searchFilter);
+            log.info("!!!!!!!!!!!!!!" + places);
+            return places;
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new PlaceException(e.getMessage());
         }
     }
 
-    public List<Place> sortByHaversine(List<Place> places, double userLatitude, double userLongitude) {
+    public List<PlaceResponseDto> sortByHaversine(List<PlaceResponseDto> places, double userLatitude, double userLongitude) {
         try {
             Collections.sort(places, (o1, o2) -> Double.compare(
                     distanceInKilometerByHaversine(o1.getLatitude(), o1.getLongitude(), userLatitude, userLongitude),

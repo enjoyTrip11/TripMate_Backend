@@ -5,18 +5,42 @@
 
 <mapper namespace="com.ssafy.tripmate.place.dao.PlaceDao">
 
-    <select id="searchAll" parameterType="SearchFilter" resultType="Place">
-        SELECT *
-        FROM location
-        WHERE 1=1
+<!--    <select id="searchAll" parameterType="SearchFilter" resultType="PlaceResponseDto">-->
+<!--        SELECT *-->
+<!--        FROM location-->
+<!--        WHERE 1=1-->
+<!--        <if test="keyword != null and keyword != ''">-->
+<!--            AND (title LIKE CONCAT('%', #{keyword}, '%'))-->
+<!--        </if>-->
+<!--        <if test="sidoCode != null and sidoCode != 0">-->
+<!--            AND sidoCode = #{sidoCode}-->
+<!--        </if>-->
+<!--        <if test="contentTypeId != null and contentTypeId != 0">-->
+<!--            AND contentTypeId = #{contentTypeId}-->
+<!--        </if>-->
+<!--    </select>-->
+
+    <select id="searchAll" parameterType="SearchFilter" resultType="PlaceResponseDto">
+        SELECT
+        l.*,
+        CASE
+        WHEN f.userId IS NOT NULL THEN true
+        ELSE false
+        END AS isFavorite
+        FROM
+        location l
+        LEFT JOIN
+        hotplace f ON l.locationId = f.locationId AND f.userId = #{userId}
+        WHERE
+        1 = 1
         <if test="keyword != null and keyword != ''">
-            AND (title LIKE CONCAT('%', #{keyword}, '%'))
+            AND (l.title LIKE CONCAT('%', #{keyword}, '%'))
         </if>
         <if test="sidoCode != null and sidoCode != 0">
-            AND sidoCode = #{sidoCode}
+            AND l.sidoCode = #{sidoCode}
         </if>
         <if test="contentTypeId != null and contentTypeId != 0">
-            AND contentTypeId = #{contentTypeId}
+            AND l.contentTypeId = #{contentTypeId}
         </if>
     </select>
 

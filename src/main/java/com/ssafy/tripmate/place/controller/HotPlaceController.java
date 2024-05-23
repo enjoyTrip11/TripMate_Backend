@@ -3,7 +3,6 @@ package com.ssafy.tripmate.place.controller;
 import com.ssafy.tripmate.place.dto.HotPlaceException;
 import com.ssafy.tripmate.place.dto.HotPlaceResponseDto;
 import com.ssafy.tripmate.place.service.HotPlaceService;
-import com.ssafy.tripmate.reply.dto.ReplyException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,8 +42,8 @@ public class HotPlaceController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "핫플레이스 조회 성공"),
             @ApiResponse(responseCode = "204", description = "핫플레이스 정보 없음"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<?> findAllHotPlaces() {
-        List<HotPlaceResponseDto> hotPlaces = service.sortAllHotPlacesByHits();
+    public ResponseEntity<?> findAllHotPlaces(@RequestParam("userId") int userId) {
+        List<HotPlaceResponseDto> hotPlaces = service.sortAllHotPlacesByHits(userId);
         if (hotPlaces.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -66,15 +65,17 @@ public class HotPlaceController {
     @PostMapping
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "핫플레이스 등록 성공"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<?> registHotPlace(@RequestParam("locationId") int locationId, @RequestParam("userId") int userId) {
+    public ResponseEntity<?> registHotPlace(@RequestParam("locationId") int locationId,
+                                            @RequestParam("userId") int userId) {
         return new ResponseEntity<>(service.regist(locationId, userId), HttpStatus.OK);
     }
 
     @DeleteMapping
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "핫플레이스 삭제 성공"),
             @ApiResponse(responseCode = "500", description = "서버 에러")})
-    public ResponseEntity<?> removeHotPlace(@RequestParam("hotplaceId") int hotplaceId) {
-        service.remove(hotplaceId);
+    public ResponseEntity<?> removeHotPlace(@RequestParam("locationId") int locationId,
+                                            @RequestParam("userId") int userId) {
+        service.remove(locationId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

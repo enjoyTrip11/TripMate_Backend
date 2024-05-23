@@ -10,6 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SearchFilter {
+
+    private Integer userId;
     private String keyword;
     private Integer sidoCode;
     private Integer contentTypeId;
@@ -21,7 +23,8 @@ public class SearchFilter {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("SearchFilter{");
-        sb.append("keyword='").append(keyword).append('\'');
+        sb.append("userId=").append(userId);
+        sb.append(", keyword='").append(keyword).append('\'');
         sb.append(", sidoCode=").append(sidoCode);
         sb.append(", contentTypeId=").append(contentTypeId);
         sb.append(", latitude=").append(latitude);

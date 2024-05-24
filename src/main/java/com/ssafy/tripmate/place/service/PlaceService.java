@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface PlaceService {
     List<PlaceResponseDto> findAll(SearchFilter searchFilter);
+    PlaceResponseDto getPlaceById(Integer locationId);
 }

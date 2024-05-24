@@ -11,4 +11,5 @@ import java.util.List;
 @Mapper
 public interface PlaceDao {
     List<PlaceResponseDto> searchAll(SearchFilter filter) throws SQLException;
+    PlaceResponseDto getPlaceById(Integer locationId) throws SQLException;
 }
